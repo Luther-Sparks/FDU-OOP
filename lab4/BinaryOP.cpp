@@ -112,6 +112,15 @@ BaseExpr* mul(BaseExpr* left, BaseExpr* right){
     if(left->alwaysZero()||right->alwaysZero()){
         return new Constant(0);
     }
+    if((!left->hasVariable()&&left->evaluate()==1)&&(!right->hasVariable()&&right->evaluate()==1)){
+        return new Constant(1);
+    }
+    if(!left->hasVariable()&&left->evaluate()==1){
+        return right;
+    }
+    if(!right->hasVariable()&&right->evaluate()==1){
+        return left;
+    }
     return new Multiplication(left,right);
 }
 BaseExpr* div(BaseExpr* left, BaseExpr* right){
