@@ -1,7 +1,7 @@
 //
 // Created by 王少文 on 2022/1/17.
 //
-
+#include "UnaryOP.h"
 #include "BinaryOP.h"
 
 double Addition::evaluate() const {
@@ -12,18 +12,11 @@ double Addition::evaluate(double x) const {
     return left->evaluate(x) + right->evaluate(x);
 }
 
-Expression *Addition::getDerivative() const {
-    return new Addition(left->getDerivative(), right->getDerivative());
+BaseExpr *Addition::getDerivative() const {
+    return add(left->getDerivative(), right->getDerivative());
 }
 
 std::string Addition::toStringRaw() const {
-    //至少左边或者右边有一个存在变量
-    if(left->alwaysZero()){//左边没有变量且始终为0
-        return right->toString();
-    }
-    if(right->alwaysZero()){//右边没有变量且始终为0
-        return left->toString();
-    }
     return "("+left->toString()+"+"+right->toString()+")";
 }
 
@@ -36,17 +29,11 @@ double Subtraction::evaluate(double x) const {
     return left->evaluate(x) - right->evaluate(x);
 }
 
-Expression *Subtraction::getDerivative() const {
-    return new Subtraction(left->getDerivative(),right->getDerivative());
+BaseExpr *Subtraction::getDerivative() const {
+    return sub(left->getDerivative(),right->getDerivative());
 }
 
 std::string Subtraction::toStringRaw() const {
-    if(left->alwaysZero()){//左边恒为0
-        return "(-"+right->toString()+")";
-    }
-    if(right->alwaysZero()){
-        return left->toString();
-    }
     return "("+left->toString()+"-"+right->toString()+")";
 }
 
@@ -59,22 +46,13 @@ double Multiplication::evaluate(double x) const {
     return left->evaluate(x) * right->evaluate(x);
 }
 
-Expression *Multiplication::getDerivative() const {
-    auto l = new Multiplication(left->getDerivative(),right);
-    auto r = new Multiplication(left,right->getDerivative());
-    return new Addition(l,r);
+BaseExpr *Multiplication::getDerivative() const {
+    auto l = mul(left->getDerivative(),right);
+    auto r = mul(left,right->getDerivative());
+    return add(l,r);
 }
 
 std::string Multiplication::toStringRaw() const {
-    if(left->alwaysZero()||right->alwaysZero()){
-        return "0";
-    }
-    if(!left->hasVariable()&&left->evaluate()==1){
-        return right->toString();
-    }
-    if(!right->hasVariable()&&right->evaluate()==1){
-        return left->toString();
-    }
     return "("+left->toString()+"*"+right->toString()+")";
 }
 
@@ -93,23 +71,58 @@ double Division::evaluate(double x) const {
     return left->evaluate(x) / right->evaluate(x);
 }
 
-Expression *Division::getDerivative() const {
+BaseExpr *Division::getDerivative() const {
     auto numerator = new Subtraction(new Multiplication(left->getDerivative(),right), new Multiplication(left, right->getDerivative()));
     auto denominator = new Multiplication(right,right);
-    return new Division(numerator, denominator);
+    return div(numerator, denominator);
 }
 
 std::string Division::toStringRaw() const {
     if(right->alwaysZero()){
         throw std::runtime_error("Divided by zero error");
     }
-    if(left->alwaysZero()){
-        return "0";
-    }
     return "("+left->toString()+"/"+right->toString()+")";
 }
 
-
+BaseExpr* add(BaseExpr* left, BaseExpr* right){
+    if(left->alwaysZero()&&right->alwaysZero()){
+        return new Constant(0);
+    }
+    if(!left->alwaysZero()&&right->alwaysZero()){
+        return left;
+    }
+    if(left->alwaysZero()&&!right->alwaysZero()){
+        return right;
+    }
+    return new Addition(left,right);
+}
+BaseExpr* sub(BaseExpr* left, BaseExpr* right){
+    if(left->alwaysZero()&&right->alwaysZero()){
+        return new Constant(0);
+    }
+    if(!left->alwaysZero()&&right->alwaysZero()){
+        return left;
+    }
+    if(left->alwaysZero()&&!right->alwaysZero()){
+        return new Minus(right);
+    }
+    return new Division(left,right);
+}
+BaseExpr* mul(BaseExpr* left, BaseExpr* right){
+    if(left->alwaysZero()||right->alwaysZero()){
+        return new Constant(0);
+    }
+    return new Multiplication(left,right);
+}
+BaseExpr* div(BaseExpr* left, BaseExpr* right){
+    if(right->alwaysZero()){
+        throw std::runtime_error("Divided by zero error");
+    }
+    if(left->alwaysZero()){
+        return new Constant(0);
+    }
+    return new Division(left, right);
+}
 
 
 

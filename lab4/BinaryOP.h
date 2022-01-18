@@ -4,11 +4,11 @@
 
 #ifndef BINARY_OP_H
 #define BINARY_OP_H
-#include "Expression.h"
+#include "BaseExpr.h"
 
-class BinaryOP : public Expression {
+class BinaryOP : public BaseExpr {
    public:
-    BinaryOP(Expression *left, Expression *right) : left(left), right(right) {}
+    BinaryOP(BaseExpr *left, BaseExpr *right) : left(left), right(right) {}
     ~BinaryOP() override {
         delete left;
         delete right;
@@ -21,55 +21,59 @@ class BinaryOP : public Expression {
 
     double evaluate(double x) const override = 0;
 
-    Expression *getDerivative() const override = 0;
+    BaseExpr *getDerivative() const override = 0;
 
 
 protected:
-    Expression *left;
-    Expression *right;
+    BaseExpr *left;
+    BaseExpr *right;
     std::string toStringRaw() const override = 0;
 };
 
 class Addition final : public BinaryOP{
 public:
-    Addition(Expression *left, Expression *right): BinaryOP(left, right){}
+    Addition(BaseExpr *left, BaseExpr *right): BinaryOP(left, right){}
     ~Addition() final = default;
     double evaluate() const override;
     double evaluate(double x) const override;
-    Expression *getDerivative() const override;
+    BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
 };
 
 class Subtraction final : public BinaryOP{
 public:
-    Subtraction(Expression *left, Expression *right): BinaryOP(left, right){}
+    Subtraction(BaseExpr *left, BaseExpr *right): BinaryOP(left, right){}
     ~Subtraction() final = default;
     double evaluate() const override;
     double evaluate(double x) const override;
-    Expression *getDerivative() const override;
+    BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
 };
 
 class Multiplication final :public BinaryOP{
 public:
-    Multiplication(Expression *left, Expression *right): BinaryOP(left, right){}
+    Multiplication(BaseExpr *left, BaseExpr *right): BinaryOP(left, right){}
     ~Multiplication() final = default;
     double evaluate() const override;
     double evaluate(double x) const override;
-    Expression *getDerivative() const override;
+    BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
 };
 
 class Division final: public BinaryOP{
 public:
-    Division(Expression *left, Expression *right): BinaryOP(left, right){}
+    Division(BaseExpr *left, BaseExpr *right): BinaryOP(left, right){}
     ~Division() final = default;
     double evaluate() const override;
     double evaluate(double x) const override;
-    Expression *getDerivative() const override;
+    BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
 };
 
+BaseExpr* add(BaseExpr* left, BaseExpr* right);
+BaseExpr* sub(BaseExpr* left, BaseExpr* right);
+BaseExpr* mul(BaseExpr* left, BaseExpr* right);
+BaseExpr* div(BaseExpr* left, BaseExpr* right);
 
 
 #endif  // BINARY_OP_H

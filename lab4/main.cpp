@@ -1,16 +1,9 @@
 #include "Expression.h"
-#include "UnaryOP.h"
-#include "BinaryOP.h"
 #include <iostream>
 
 int main(){
-    auto x = variable();
-    auto e = sin(x);
-    auto ee = sin(cos(x));
-    auto m = new Multiplication(ee, x);
-    std::cout<< m->toString()<<std::endl;
-    std::cout<<m->getDerivative()->toString()<<std::endl;
-
-
-
+    auto expr = sin(5.23333*X());
+    std::cout<< expr.toString()<<std::endl;
+    auto diff = expr.getDerivative();
+    std::cout<<diff.toString()<<std::endl;
 }
