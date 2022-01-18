@@ -16,12 +16,12 @@ Expression Expression::getDerivative() const {
 
 Expression X() { return Expression(new Variable()); }
 Expression constant(double x) { return Expression(x); }
-Expression sin(Expression operand) { return Expression(new Sin(operand.ptr)); }
+Expression sin(Expression operand) { return Expression(new Sin(operand.ptr->clone())); }
 Expression cos(Expression operand) {
-    return Expression((new Cos(operand.ptr)));
+    return Expression((new Cos(operand.ptr->clone())));
 }
 Expression operator-(Expression operand) {
-    return Expression(new Minus(operand.ptr));
+    return Expression(new Minus(operand.ptr->clone()));
 }
 Expression operator+(Expression left, Expression right) {
     return Expression(add(left.ptr, right.ptr));

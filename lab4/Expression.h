@@ -21,7 +21,9 @@ class Expression {
 public:
     Expression(double value); // NOLINT
     Expression(BaseExpr* ptr); // NOLINT 让clang tidy闭嘴
-    ~Expression()=default;
+    ~Expression(){
+        delete ptr;
+    }
     std::string toString() const;
     double evaluate() const;
     double evaluate(double x) const;

@@ -1,9 +1,9 @@
 #ifndef BASE_EXPR_H
 #define BASE_EXPR_H
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
-#include <iomanip>
 
 const int PRECISION = 3;
 /**
@@ -31,7 +31,9 @@ class BaseExpr {
     virtual double evaluate(double x) const = 0;
     virtual BaseExpr* getDerivative() const = 0;
     virtual ~BaseExpr() = default;
-    protected:
+    virtual BaseExpr* clone() const = 0;
+
+   protected:
     virtual std::string toStringRaw() const = 0;
 };
 
@@ -45,8 +47,9 @@ class Constant : public BaseExpr {
         return oss.str();
     }
     double evaluate() const final { return value; }
-    double evaluate(double x) const final{ return value; }
-    BaseExpr* getDerivative() const final{ return new Constant(0); }
+    double evaluate(double x) const final { return value; }
+    BaseExpr* getDerivative() const final { return new Constant(0); }
+    BaseExpr* clone() const final { return new Constant(value); }
 
    private:
     double value;
@@ -55,12 +58,12 @@ class Constant : public BaseExpr {
 class Variable : public BaseExpr {
    public:
     Variable() = default;
-    bool hasVariable() const final{ return true; }
+    bool hasVariable() const final { return true; }
     std::string toStringRaw() const final { return "x"; }
     double evaluate() const final { throw std::runtime_error("x is not set"); }
     double evaluate(double x) const final { return x; }
     BaseExpr* getDerivative() const final { return new Constant(1); }
+    BaseExpr* clone() const final { return new Variable(); }
 };
-
 
 #endif  // BASE_EXPR_H

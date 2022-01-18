@@ -12,12 +12,18 @@ double Sin::evaluate(double x) const { return sin(operand->evaluate(x)); }
 BaseExpr* Sin::getDerivativeRaw() const {
     return new Cos(operand);
 }
+BaseExpr* Sin::clone() const {
+    return new Sin(operand->clone());
+}
 
 std::string Cos::toStringRaw() const { return "cos(" + operand->toString() + ")"; }
 double Cos::evaluate() const { return cos(operand->evaluate()); }
 double Cos::evaluate(double x) const { return cos(operand->evaluate(x)); }
 BaseExpr* Cos::getDerivativeRaw() const {
     return new Minus(new Sin(operand));
+}
+BaseExpr* Cos::clone() const {
+    return new Cos(operand->clone());
 }
 
 double Minus::evaluate() const {
@@ -31,4 +37,7 @@ std::string Minus::toStringRaw() const {
 }
 BaseExpr *Minus::getDerivativeRaw() const {
     return new Constant(-1);
+}
+BaseExpr *Minus::clone() const {
+    return new Minus(operand->clone());
 }

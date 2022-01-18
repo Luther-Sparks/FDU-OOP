@@ -19,7 +19,9 @@ BaseExpr *Addition::getDerivative() const {
 std::string Addition::toStringRaw() const {
     return "("+left->toString()+"+"+right->toString()+")";
 }
-
+BaseExpr *Addition::clone() const {
+    return new Addition(left->clone(), right->clone());
+}
 
 double Subtraction::evaluate() const {
     return left->evaluate() - right->evaluate();
@@ -36,7 +38,9 @@ BaseExpr *Subtraction::getDerivative() const {
 std::string Subtraction::toStringRaw() const {
     return "("+left->toString()+"-"+right->toString()+")";
 }
-
+BaseExpr *Subtraction::clone() const {
+    return new Subtraction(left->clone(), right->clone());
+}
 
 double Multiplication::evaluate() const {
     return left->evaluate() * right->evaluate();
@@ -56,6 +60,9 @@ std::string Multiplication::toStringRaw() const {
     return "("+left->toString()+"*"+right->toString()+")";
 }
 
+BaseExpr *Multiplication::clone() const {
+    return new Multiplication(left->clone(), right->clone());
+}
 
 double Division::evaluate() const {
     if(right->alwaysZero()){
@@ -84,29 +91,33 @@ std::string Division::toStringRaw() const {
     return "("+left->toString()+"/"+right->toString()+")";
 }
 
+BaseExpr *Division::clone() const {
+    return new Division(left->clone(), right->clone());
+}
+
 BaseExpr* add(BaseExpr* left, BaseExpr* right){
     if(left->alwaysZero()&&right->alwaysZero()){
         return new Constant(0);
     }
     if(!left->alwaysZero()&&right->alwaysZero()){
-        return left;
+        return left->clone();
     }
     if(left->alwaysZero()&&!right->alwaysZero()){
-        return right;
+        return right->clone();
     }
-    return new Addition(left,right);
+    return new Addition(left->clone(),right->clone());
 }
 BaseExpr* sub(BaseExpr* left, BaseExpr* right){
     if(left->alwaysZero()&&right->alwaysZero()){
         return new Constant(0);
     }
     if(!left->alwaysZero()&&right->alwaysZero()){
-        return left;
+        return left->clone();
     }
     if(left->alwaysZero()&&!right->alwaysZero()){
         return new Minus(right);
     }
-    return new Division(left,right);
+    return new Subtraction(left->clone(),right->clone());
 }
 BaseExpr* mul(BaseExpr* left, BaseExpr* right){
     if(left->alwaysZero()||right->alwaysZero()){
@@ -116,12 +127,12 @@ BaseExpr* mul(BaseExpr* left, BaseExpr* right){
         return new Constant(1);
     }
     if(!left->hasVariable()&&left->evaluate()==1){
-        return right;
+        return right->clone();
     }
     if(!right->hasVariable()&&right->evaluate()==1){
-        return left;
+        return left->clone();
     }
-    return new Multiplication(left,right);
+    return new Multiplication(left->clone(),right->clone());
 }
 BaseExpr* div(BaseExpr* left, BaseExpr* right){
     if(right->alwaysZero()){
@@ -130,7 +141,7 @@ BaseExpr* div(BaseExpr* left, BaseExpr* right){
     if(left->alwaysZero()){
         return new Constant(0);
     }
-    return new Division(left, right);
+    return new Division(left->clone(), right->clone());
 }
 
 

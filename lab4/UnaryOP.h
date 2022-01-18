@@ -11,6 +11,7 @@ class UnaryOP : public BaseExpr {
     double evaluate() const override = 0;
     double evaluate(double x) const override = 0;
     BaseExpr* getDerivative() const override;
+    
 
    protected:
     BaseExpr* operand;
@@ -24,6 +25,7 @@ class Sin final : public UnaryOP {
 
     double evaluate() const override;
     double evaluate(double x) const override;
+    BaseExpr* clone() const override;
 
    protected:
     std::string toStringRaw() const override;
@@ -37,6 +39,7 @@ class Cos final : public UnaryOP {
 
     double evaluate() const override;
     double evaluate(double x) const override;
+    BaseExpr* clone() const override;
 
    protected:
     std::string toStringRaw() const override;
@@ -50,6 +53,7 @@ class Minus final: public UnaryOP {
 
     double evaluate() const override;
     double evaluate(double x) const override;
+    BaseExpr* clone() const override;
 
    protected:
     std::string toStringRaw() const override;

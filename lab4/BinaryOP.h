@@ -38,6 +38,7 @@ public:
     double evaluate(double x) const override;
     BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
+    BaseExpr *clone() const final;
 };
 
 class Subtraction final : public BinaryOP{
@@ -48,6 +49,7 @@ public:
     double evaluate(double x) const override;
     BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
+    BaseExpr *clone() const final;
 };
 
 class Multiplication final :public BinaryOP{
@@ -58,6 +60,7 @@ public:
     double evaluate(double x) const override;
     BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
+    BaseExpr *clone() const final;
 };
 
 class Division final: public BinaryOP{
@@ -68,6 +71,7 @@ public:
     double evaluate(double x) const override;
     BaseExpr *getDerivative() const override;
     std::string toStringRaw() const override;
+    BaseExpr *clone() const final;
 };
 
 BaseExpr* add(BaseExpr* left, BaseExpr* right);
