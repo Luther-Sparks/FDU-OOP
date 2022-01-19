@@ -21,7 +21,7 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
     assert(file.is_open());
     string all_text;
     int counter = 0;
-    while (getline(file, all_text)) {
+    while (getline(file, all_text) && words.size() <= 3000) {
         transform(all_text.begin(), all_text.end(), all_text.begin(), ::tolower);
 
         // 可以不用正则而用字符串分割
