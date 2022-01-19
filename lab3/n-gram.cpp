@@ -97,12 +97,12 @@ vector<vector<float>> normalize(vector<vector<int>>& matrix) {
 
 
 int main(int argc, const char** argv) {
-    // if (argc != 3) {
-    //     cout << "Invalid input" << endl;
-    //     cout << "Usage: ./n-gram <n> <input file>" << endl;
-    //     return 1;
-    // }
-    n_gram_matrix = get_n_gram_matrix(words, n_grams, "wiki.txt", 2);
+    if (argc != 3) {
+        cout << "Invalid input" << endl;
+        cout << "Usage: ./lab3 <n> <input file>" << endl;
+        return 1;
+    }
+    n_gram_matrix = get_n_gram_matrix(words, n_grams, argv[2], stoi(argv[1]));
     auto normalized_matrix = normalize(n_gram_matrix);
     for(auto gram : n_grams) {
         cout << '\t' << gram;
