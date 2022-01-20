@@ -9,6 +9,7 @@
 using namespace std;
 
 vector<string> words;
+unordered_map<string, int> word_count;
 vector<string> n_grams;
 unordered_map<string, int> n_gram_count;
 vector<vector<int>> n_gram_matrix;
@@ -20,8 +21,7 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
     cout << "Reading file " << filename << "..." << endl;
     assert(file.is_open());
     string all_text;
-    int counter = 0;
-    while (getline(file, all_text) && words.size() <= 3000) {
+    while (getline(file, all_text)) {
         transform(all_text.begin(), all_text.end(), all_text.begin(), ::tolower);
 
         // 可以不用正则而用字符串分割
@@ -30,21 +30,25 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
         sregex_token_iterator end;
         while (regex_iter != end) {
             words.emplace_back(*regex_iter);
+            word_count[*regex_iter]++;
             ++regex_iter;
         }
     }
+    cout << "Now we have all the words and n-grams." << endl;
+    cout << "There are " << words.size() << " words." << endl;
+    cout << "We should clean our data." << endl;
+    cout << "If a word appears less than 5 times, we will replace it with [unk]." << endl;
+    replace_if(words.begin(), words.end(), [](string s) {
+        return word_count[s] < 15;
+    }, "unk");
 
     for (int i = 0; i < n - 1; i++) {   // padding
-        words.insert(words.begin(), "");
-        words.insert(words.end(), "");
+        words.insert(words.begin(), "unk");
+        words.insert(words.end(), "unk");
     }
 
     vector<string>::iterator iter, iter_end;
     for (iter = words.begin(), iter_end = iter+n-1; iter_end != words.end(); iter++, iter_end++) {
-        counter++;
-        if (counter % 1000 == 0) {
-            cout << "epoch: " << counter / 1000 << endl;
-        }
         string n_gram = accumulate(iter, iter_end, string(""), [](string& s, string& t) {
             return s + " " + t;
         });
@@ -53,7 +57,6 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
     }
     cout << "Done with setting up words and n_grams." << endl;
     cout << "Now setting up n_gram_matrix..." << endl;
-    counter = 0;
     auto n_grams_set = set<string>(n_grams.begin(), n_grams.end());
     n_grams = vector<string>(n_grams_set.begin(), n_grams_set.end());
     auto words_set = set<string>(words.begin(), words.end());
@@ -66,10 +69,6 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
     n_gram_matrix[0][0] = 0;
     cout << "Done with filtering words and n_grams." << endl;
     for (int i = 0; i < n_words; i++) {
-        counter++;
-        if (counter % 1000 == 0) {
-            cout << "epoch: " << counter << endl;
-        }
         for (int j = 0; j < n_gram_num; j++) {
             auto iter = n_gram_count.find(words[i]+" "+n_grams[j]);
             if (iter != n_gram_count.end()) {
