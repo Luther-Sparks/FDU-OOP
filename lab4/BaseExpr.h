@@ -15,7 +15,7 @@ const int PRECISION = 3;
  * 4. 二元操作符表达式：Binary，是二元操作符，如+，-，*，/, ^
  * 而每一种表达式需要实现如下四种接口：
  * 1. hasVariable()，判断表达式中是否有变量，如果有返回true，否则返回false
- * 2. toStringRaw()，将表达式转换为字符串形式
+ * 2. toString()，将表达式转换为字符串形式
  * 3.
  * evaluate()，计算表达式的值，若表达式中的变量还没有赋值，则抛出异常；若表达式中的变量已经赋值，则返回表达式的值
  * 4. getDerivative()，计算表达式的导数，返回一个表达式对象
@@ -23,25 +23,21 @@ const int PRECISION = 3;
 
 class BaseExpr {
    public:
-    virtual std::string toString() const;
     virtual bool alwaysZero() const;
-
+    virtual std::string toString() const = 0;
     virtual bool hasVariable() const = 0;
     virtual double evaluate() const = 0;
     virtual double evaluate(double x) const = 0;
     virtual BaseExpr* getDerivative() const = 0;
     virtual ~BaseExpr() = default;
     virtual BaseExpr* clone() const = 0;
-
-   protected:
-    virtual std::string toStringRaw() const = 0;
 };
 
 class Constant : public BaseExpr {
    public:
     explicit Constant(double value) : value(value) {}
     bool hasVariable() const final { return false; }
-    std::string toStringRaw() const final {
+    std::string toString() const final {
         std::ostringstream oss;
         oss << std::setprecision(PRECISION) << value;
         return oss.str();
@@ -59,7 +55,7 @@ class Variable : public BaseExpr {
    public:
     Variable() = default;
     bool hasVariable() const final { return true; }
-    std::string toStringRaw() const final { return "x"; }
+    std::string toString() const final { return "x"; }
     double evaluate() const final { throw std::runtime_error("x is not set"); }
     double evaluate(double x) const final { return x; }
     BaseExpr* getDerivative() const final { return new Constant(1); }

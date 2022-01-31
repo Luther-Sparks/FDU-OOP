@@ -1,4 +1,5 @@
 #include "Expression.h"
+#include "Operation.h"
 
 Expression::Expression(double value) : ptr(new Constant(value)) {}
 
@@ -15,7 +16,6 @@ Expression Expression::getDerivative() const {
 }
 
 Expression X() { return Expression(new Variable()); }
-Expression constant(double x) { return Expression(x); }
 Expression sin(Expression operand) { return Expression(new Sin(operand.ptr->clone())); }
 Expression cos(Expression operand) {
     return Expression((new Cos(operand.ptr->clone())));

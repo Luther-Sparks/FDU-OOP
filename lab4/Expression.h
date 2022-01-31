@@ -33,7 +33,6 @@ private:
 };
 
 Expression X();
-Expression constant(double x);
 Expression sin(Expression operand);
 Expression cos(Expression operand);
 Expression operator-(Expression operand);

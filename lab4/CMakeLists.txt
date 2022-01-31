@@ -9,4 +9,11 @@ add_executable(lab4
         BaseExpr.h
         main.cpp
         UnaryOP.cpp
-        UnaryOP.h BaseExpr.cpp BinaryOP.cpp BinaryOP.h Expression.cpp Expression.h)
+        UnaryOP.h 
+        BaseExpr.cpp 
+        BinaryOP.cpp 
+        BinaryOP.h 
+        Expression.cpp 
+        Expression.h 
+        Operation.h 
+        Operation.cpp)

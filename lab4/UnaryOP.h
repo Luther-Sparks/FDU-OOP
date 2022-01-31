@@ -2,6 +2,8 @@
 #define UNARY_OP_H
 
 #include "BaseExpr.h"
+#include "Operation.h"
+
 class UnaryOP : public BaseExpr {
    public:
     explicit UnaryOP(BaseExpr* operand) : operand(operand) {}
@@ -11,11 +13,10 @@ class UnaryOP : public BaseExpr {
     double evaluate() const override = 0;
     double evaluate(double x) const override = 0;
     BaseExpr* getDerivative() const override;
-    
 
    protected:
     BaseExpr* operand;
-    virtual BaseExpr* getDerivativeRaw() const = 0;
+    virtual BaseExpr* getDerivativeOuter() const = 0;
 };
 
 class Sin final : public UnaryOP {
@@ -28,8 +29,8 @@ class Sin final : public UnaryOP {
     BaseExpr* clone() const override;
 
    protected:
-    std::string toStringRaw() const override;
-    BaseExpr* getDerivativeRaw() const override;
+    std::string toString() const override;
+    BaseExpr* getDerivativeOuter() const override;
 };
 
 class Cos final : public UnaryOP {
@@ -42,11 +43,11 @@ class Cos final : public UnaryOP {
     BaseExpr* clone() const override;
 
    protected:
-    std::string toStringRaw() const override;
-    BaseExpr* getDerivativeRaw() const override;
+    std::string toString() const override;
+    BaseExpr* getDerivativeOuter() const override;
 };
 
-class Minus final: public UnaryOP {
+class Minus final : public UnaryOP {
    public:
     explicit Minus(BaseExpr* operand) : UnaryOP(operand) {}
     ~Minus() override = default;
@@ -56,7 +57,7 @@ class Minus final: public UnaryOP {
     BaseExpr* clone() const override;
 
    protected:
-    std::string toStringRaw() const override;
-    BaseExpr* getDerivativeRaw() const override;
+    std::string toString() const override;
+    BaseExpr* getDerivativeOuter() const override;
 };
 #endif

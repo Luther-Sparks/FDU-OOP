@@ -6,4 +6,5 @@ int main(){
     std::cout<< expr.toString()<<std::endl;
     auto diff = expr.getDerivative();
     std::cout<<diff.toString()<<std::endl;
+    std::cout<<diff.evaluate(1.0)<<std::endl;
 }
