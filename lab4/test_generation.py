@@ -101,13 +101,15 @@ def test_once(test_version: str):
                 pass
         return
 
+
+
 def generate_test(num: int):
     for i in range(num):
-        test_once(str(i))
+        test_once("polynomial_"+str(i))
     global POLYNOMIAL
     POLYNOMIAL = FALSE
-    for i in range(num, 2*num):
-        test_once(str(i))
+    for i in range(num):
+        test_once("complex_"+str(i))
 
 if __name__ == "__main__":
     generate_test(10)
