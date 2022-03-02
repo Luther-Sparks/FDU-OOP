@@ -2,7 +2,7 @@
 
 ## 实验环境安装
 
-在本课程中，我们要求大家放弃使用`DevCpp`这种不符合时代主流的编辑器，因为`DevCpp`对于C++新标准的支持不够，所以我们要求大家使用如`VSCode`和`CLion`等现代一点的编辑器或IDE。
+在本课程中，我们要求大家放弃使用`DevCpp`这种不符合时代主流的编辑器，因为`DevCpp`对于C++新标准的支持不够~~(绝对不是因为它又丑又难用)~~，所以我们要求大家使用如`VSCode`和`CLion`等现代一点的编辑器或IDE。
 
 这里我们将向大家分别介绍`CLion`和`VSCode`的安装方式，大家可以**选其中一种**进行安装和日常使用。在安装`CLion`或`VSCode`之前，我们将先安装一些前置文件。
 
@@ -50,6 +50,8 @@
 #### `CMake`安装
 
 这一部分内容与上一部分类似，可以直接参考这篇博客[win10下Cmake（make-gui）下载与安装【详细】_小庄同学的博客-CSDN博客_cmakegui下载](https://blog.csdn.net/qq_37112826/article/details/108869737?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163486929316780271540375%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=163486929316780271540375&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-2-108869737.pc_search_result_cache&utm_term=window10%20cmake&spm=1018.2226.3001.4187)。
+
+大家在官网下载`CMake`可能会出现被墙的情况，所以我会在elearning的文件中上传一份Windows的`CMake`的安装包供大家下载。
 
 ### MacOS环境安装
 

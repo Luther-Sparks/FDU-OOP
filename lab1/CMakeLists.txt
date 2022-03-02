@@ -10,3 +10,6 @@ add_executable(endlessLoop
 
 add_executable(segmentationFault
         segmentFault.cpp)
+
+add_executable(findKthStr
+        findKthStr.cpp)
