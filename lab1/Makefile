@@ -13,6 +13,7 @@ ifeq ($(OS), Windows_NT)
 	TESTFILE_NAME := testFindKthStr.exe
 	RM := del
 	CP := copy
+	CMAKE_GENERATOR := -G MinGW Makefiles
 
 handin:
 	-mkdir src
@@ -23,6 +24,7 @@ else
 	TESTFILE_NAME := testFindKthStr
 	RM := rm
 	CP := cp
+	CMAKE_GENERATOR := 
 
 handin:
 	-mkdir src
@@ -35,7 +37,7 @@ endif
 
 compile:
 	-mkdir build
-	cd build && cmake .. -G "MinGW Makefiles" && make
+	cd build && cmake .. $(CMAKE_GENERATOR) && make
 	@echo "Done with make compile"
 
 grade:
