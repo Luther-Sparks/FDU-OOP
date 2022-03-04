@@ -13,12 +13,17 @@ ifeq ($(OS), Windows_NT)
 	TESTFILE_NAME := testFindKthStr.exe
 	RM := del
 	CP := copy
-	CMAKE_GENERATOR := -G MinGW Makefiles
+	CMAKE_GENERATOR := -G "MinGW Makefiles"
 
 handin:
 	-mkdir src
 	$(CP) lab1_$(STD_NAME)_$(STD_ID).pdf src
 	$(CP) findKthStr.cpp src
+
+clean:
+	-$(RM) $(TESTFILE_NAME)
+	@echo Done with make clean
+	@echo on Windows you should delete directory '\build' manually
 
 else
 	TESTFILE_NAME := testFindKthStr
@@ -31,7 +36,11 @@ handin:
 	$(CP) lab1_$(STD_NAME)_$(STD_ID).pdf src
 	$(CP) findKthStr.cpp src
 	zip -r lab1_$(STD_NAME)_$(STD_ID).zip src
-	$(RM) -rf src/
+	$(RM) -rf src
+clean:
+	-$(RM) -f $(TESTFILE_NAME)
+	-$(RM) -r build/
+	@echo "Done with make clean"
 
 endif
 
@@ -45,10 +54,7 @@ grade:
 	./$(TESTFILE_NAME)
 	@echo "Done with make grade"
 
-clean:
-	-$(RM) -f $(TESTFILE_NAME)
-	-$(RM) -r ./build
-	@echo "Done with make clean"
+
 
 all:compile grade
 	@echo "Done with make all"
