@@ -29,8 +29,7 @@ bool test(StrVec str_vec, int k, StrVec expected) {
     }
     fin.close();
     #ifdef _WIN32
-    system("type nul > tmp.in");
-    system("./build/findKthStr.exe < tmp.in > tmp.out");
+    system(".\\build\\findKthStr.exe < tmp.in > tmp.out");
     #else
     system("touch tmp.in");
     system("./build/findKthStr < tmp.in > tmp.out");
@@ -47,7 +46,12 @@ bool test(StrVec str_vec, int k, StrVec expected) {
             ++regex_iter;
         }
     }
+    fout.close();
+    #ifdef _WIN32
+    system("del tmp.in tmp.out");
+    #else
     system("rm tmp.in tmp.out");
+    #endif
     if (!check_StrVec_equal(res, expected)) {
         return false;
     }
