@@ -1,6 +1,7 @@
 from subprocess import Popen, PIPE
 from sys import stderr
 import argparse
+import os
 
 class Test(object):
     def __init__(self, command, input_data, expected_output, encode_type='utf-8'):
@@ -45,23 +46,30 @@ if __name__ == '__main__':
     encode_type = args.encode_type
     vec = ['php', 'is', 'the', 'best', 'language', 'in', 'the', 'world']
     score = 0
-    if Test('./build/findKthStr', ['8', '-1'] + vec, [], encode_type).run_test() and  \
-         Test('./build/findKthStr', ['8', '0'] + vec, [], encode_type).run_test() and \
-             Test('./build/findKthStr', ['8', '7'] + vec, [], encode_type).run_test():
+    if os.name == 'nt':
+        test_file = '.\\build\\findKthStr.exe'
+    elif os.name == 'posix':
+        test_file = './build/findKthStr'
+    else:
+        assert False, 'Unsupported OS'
+    
+    if Test(test_file, ['8', '-1'] + vec, [], encode_type).run_test() and  \
+         Test(test_file, ['8', '0'] + vec, [], encode_type).run_test() and \
+             Test(test_file, ['8', '7'] + vec, [], encode_type).run_test():
         print('\033[32m[OK] invalid_k_test passed\033[0m')
         score += 5
     else:
         print('\033[31m[Fail] invalid_k_test failed\033[0m')
         
-    if Test('./build/findKthStr', ['8', '3'] + vec, ['best'], encode_type).run_test() and  \
-         Test('./build/findKthStr', ['8', '5'] + vec, ['language'], encode_type).run_test():
+    if Test(test_file, ['8', '3'] + vec, ['best'], encode_type).run_test() and  \
+         Test(test_file, ['8', '5'] + vec, ['language'], encode_type).run_test():
         print('\033[32m[OK] single_output_test passed\033[0m')
         score += 5
     else:
         print('\033[31m[Fail] single_output_test passed\033[0m')
         
-    if Test('./build/findKthStr', ['8', '2'] + vec, ['php', 'the', 'the'], encode_type).run_test() and  \
-         Test('./build/findKthStr', ['8', '1'] + vec, ['is', 'in'], encode_type).run_test():
+    if Test(test_file, ['8', '2'] + vec, ['php', 'the', 'the'], encode_type).run_test() and  \
+         Test(test_file, ['8', '1'] + vec, ['is', 'in'], encode_type).run_test():
         print('\033[32m[OK] multi_output_test passed\033[0m')
         score += 10
     else:

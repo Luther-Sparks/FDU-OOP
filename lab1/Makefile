@@ -2,23 +2,40 @@
 
 # Please enter your name and student ID down here
 # Name:
-STD_NAME := 
+STD_NAME := 123
 # Student ID:
-STD_ID   := 
+STD_ID   := 123
 #Like this
 # STD_NAME := 野兽先辈
 # STD_ID   := 21307114514
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Windows_NT)
+ifeq ($(OS), Windows_NT)
 	TESTFILE_NAME := testFindKthStr.exe
+	RM := del
+	CP := copy
+
+handin:
+	-mkdir src
+	$(CP) lab1_$(STD_NAME)_$(STD_ID).pdf src
+	$(CP) findKthStr.cpp src
+
 else
 	TESTFILE_NAME := testFindKthStr
+	RM := rm
+	CP := cp
+
+handin:
+	-mkdir src
+	$(CP) lab1_$(STD_NAME)_$(STD_ID).pdf src
+	$(CP) findKthStr.cpp src
+	zip -r lab1_$(STD_NAME)_$(STD_ID).zip src
+	$(RM) -rf src/
+
 endif
 
 compile:
 	-mkdir build
-	cd build && cmake .. && make
+	cd build && cmake .. -G "MinGW Makefiles" && make
 	@echo "Done with make compile"
 
 grade:
@@ -27,15 +44,9 @@ grade:
 	@echo "Done with make grade"
 
 clean:
-	rm -f $(TESTFILE_NAME)
-	rm -r ./build
+	-$(RM) -f $(TESTFILE_NAME)
+	-$(RM) -r ./build
 	@echo "Done with make clean"
 
 all:compile grade
 	@echo "Done with make all"
-
-handin:
-	-mkdir src
-	-cp lab1_$(STD_NAME)_$(STD_ID).pdf findKthStr.cpp src/
-	zip -r lab1_$(STD_NAME)_$(STD_ID).zip src/
-	-rm -rf src/
