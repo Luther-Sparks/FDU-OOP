@@ -1,7 +1,13 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.0)
 project(lab2)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Werror")
 
-add_executable(lab2
-        main.cpp)
+add_executable(editor
+        main.cpp
+        util.cpp
+        util.h
+        editor.cpp 
+        editor.h
+        )

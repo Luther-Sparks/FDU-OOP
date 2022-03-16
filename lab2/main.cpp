@@ -3,86 +3,54 @@
 #include <list>
 #include <string>
 
+#include "editor.h"
 using namespace std;
 
-void read_lines(istream &is, list<string> &lines) {
-    string line;
-    while (getline(is, line)) {
-        lines.push_back(line);
-    }
-}
+// Code style (for anyone interested): {BasedOnStyle: Google, IndentWidth: 4,
+// ColumnLimit: 120}
 
-void output_lines(ostream &os, const list<string> &lines, bool line_num = false) {
-    int i = 1;
-    for (const string &line : lines) {
-        if (line_num) {
-            os << i++ << ": ";
-        }
-        os << line << endl;
-    }
-}
-
-void delete_line(list<string> &lines, int line_num) {
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    lines.erase(it);
-}
-
-void insert_line(list<string> &lines, int line_num, const string &line) {
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    lines.insert(it, line);
-}
-
-void replace_line(list<string> &lines, int line_num, const string &line) {
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    *it = line;
-}
-
-void main_loop(istream &is, ostream &os) {
-    list<string> lines;
-    read_lines(is, lines);
-    while (true){
-        cout << "> ";
-        string cmd;
-        getline(cin, cmd);
-        if(cmd == "q") {
-            break;
-        }else if(cmd == "l") {
-            output_lines(os, lines, true);
-        }else if(cmd.find('d') == 0) {
-            int line_num = stoi(cmd.substr(2));
-            delete_line(lines, line_num);
-        }else if(cmd.find('i') == 0) {
-            string str = cmd.substr(2);
-            int line_num = stoi(str.substr(0, str.find(' ')));
-            string line = str.substr(str.find(' ') + 1);
-            insert_line(lines, line_num, line);
-        }else if(cmd.find('r') == 0) {
-            string str = cmd.substr(2);
-            int line_num = stoi(str.substr(0, str.find(' ')));
-            string line = str.substr(str.find(' ') + 1);
-            replace_line(lines, line_num, line);
-        }else { 
-            cerr << "Invalid command" << endl;
-            break;
-        }
-    }
-}
-
+/**
+ * @brief This is the main function of the editor.
+ *        When execute the editor program, we can expect 0 or 1 argument(argc be
+ * 1 or 2). If there is no argument, we will first ask user to input a filename.
+ *        If there is one argument, we will open the file and start to edit.
+ *        Otherwise, we will print the usage and exit.
+ *        Usage: ./editor.exe [filename] (windows)
+ *               ./editor [filename] (*nix)
+ *        Please note that if the file do not exist, we will create it with specified filename.
+ * @param argc
+ * @param argv
+ * @return int 0 if success, -1 if any unexpected error
+ */
 int main(int argc, char *argv[]) {
-    if (argc == 1) {
-        main_loop(cin, cout);
-    } else if (argc == 2) {
-        ifstream ifs(argv[1]);
-        if (ifs.is_open()) {
-            main_loop(ifs, cout);
-        } else {
-            cout << "Could not open file " << argv[1] << endl;
+    string filename;
+    if (argc <= 2) {
+        if (argc == 1) {
+            cout << "Please input a file name: ";
+            getline(cin, filename);
+        } else if (argc == 2) {
+            filename = argv[1];
         }
+        // Open the file or create a new file
+        ifstream file(filename);
+        if (!file.is_open()) {
+            ofstream newfile(filename);
+            if (!newfile.is_open()) {
+                cout << "Error: Cannot create file " << filename << endl;
+                return -1;
+            }
+            newfile.close();
+            file.open(filename);
+        }
+        // Run the main loop
+        main_loop(file, filename);
     } else {
-        cout << "Too many arguments" << endl;
-        return 1;
+// #ifdef __WIN32__
+//         cerr << "Usage: ./editor.exe [filename]" << endl;
+// #else
+//         cerr << "Usage: ./editor [filename]" << endl;
+// #endif
+        return -1;
     }
+    return 0;
 }
