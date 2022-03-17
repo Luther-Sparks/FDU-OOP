@@ -9,52 +9,39 @@ using namespace std;
 
 /**
  * @brief Read lines from filename
- * 
+ *        If something goes wrong, also output_error(cerr, "Runtime error\n")
  * @param filename file to be opened
  * @param lines store each line of file
  * @return true if success
- * @return false if something goes wrong, e.g. os is not open
+ * @return false if something goes wrong, e.g. can't open file
  */
 bool read_lines(const string& filename, list<string> &lines) {
-    ifstream is(filename);
-    if (!is) {
-        output_error(cerr, "Runtime error\n");
-        return false;
-    }
-    lines.clear();
-    string line;
-    while (getline(is, line)) {
-        lines.push_back(line);
-    }
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return true;
 }
 
 /**
  * @brief Output lines to os.
+ *        If something goes wrong, also output_error(cerr, "Runtime error\n")
  *
  * @param os output stream, usually cout or ofstream
- * @param lines
+ * @param lines lines to be output
  * @param show_line_num if true, output line number before each line
  * @return true if success
  * @return false if something goes wrong, e.g. os is not open
  */
 bool output_lines(ostream &os, const list<string> &lines, bool show_line_num = false) {
-    if (!os) {
-        output_error(cerr, "Runtime error\n");
-        return false;
-    }
-    int i = 1;
-    for (const string &line : lines) {
-        if (show_line_num) {
-            os << i++ << ": ";
-        }
-        os << line << endl;
-    }
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return true;
 }
 
 /**
  * @brief Delete line at line_num from lines.
+ *        If something goes wrong, also output_error(cerr, "Runtime error\n")
  *
  * @param lines The list of lines to be deleted from
  * @param line_num The index of the line to be delete.
@@ -62,18 +49,15 @@ bool output_lines(ostream &os, const list<string> &lines, bool show_line_num = f
  * @return false something goes wrong, e.g. line_num is out of range.
  */
 bool delete_line(list<string> &lines, int line_num) {
-    if (line_num <= 0 || line_num > (int)lines.size()) {
-        output_error(cerr, "Runtime error\n");
-        return false;
-    }
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    lines.erase(it);
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return true;
 }
 
 /**
  * @brief Insert a line into the list of lines.
+ *        If something goes wrong, also output_error(cerr, "Runtime error\n")
  *
  * @param lines The list of lines to be inserted into.
  * @param line_num The index of the line to be inserted.
@@ -82,18 +66,15 @@ bool delete_line(list<string> &lines, int line_num) {
  * @return false something goes wrong, e.g. line_num is out of range.
  */
 bool insert_line(list<string> &lines, int line_num, const string &line) {
-    if (line_num <= 0 || line_num > (int)lines.size() + 1) {
-        output_error(cerr, "Runtime error\n");
-        return false;
-    }
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    lines.insert(it, line);
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return true;
 }
 
 /**
- * @brief
+ * @brief Replace the line at line_num with line.
+ *        If something goes wrong, also output_error(cerr, "Runtime error\n")
  *
  * @param lines The list of lines to be replaced.
  * @param line_num The index of the line to be replaced.
@@ -102,13 +83,9 @@ bool insert_line(list<string> &lines, int line_num, const string &line) {
  * @return false something goes wrong, e.g. line_num is out of range.
  */
 bool replace_line(list<string> &lines, int line_num, const string &line) {
-    if (line_num <= 0 || line_num > (int)lines.size()) {
-        output_error(cerr, "Runtime error\n");
-        return false;
-    }
-    auto it = lines.begin();
-    advance(it, line_num - 1);
-    *it = line;
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return true;
 }
 
@@ -116,7 +93,7 @@ bool replace_line(list<string> &lines, int line_num, const string &line) {
  * @brief Check whether given argc is in expect_count
  *        E.g. check_argc(1, {1, 2, 3}) => true
  *             check_argc(2, {1, 3}) => false
- *        If in, return true, else output_error and return false
+ *        If in, return true, else output_error(cerr, "Invalid command\n") and return false
  *
  * @param argc the number of arguments
  * @param expect_count the expected number of arguments
@@ -130,7 +107,7 @@ inline bool check_argc(vector<string>::size_type argc, vector<int> expect_count)
     return false;
 }
 /**
- * @brief A candy function to output ok
+ * @brief If result is true, output_info(cout, "OK\n")
  *
  * @param result
  */
@@ -178,30 +155,10 @@ void main_loop(const string &filename) {
         if (cmds[0] == "i" || cmds[0] == "insert") {
             if (!check_argc(cmds.size(), {3})) continue;
             check_result(insert_line(lines, stoi(cmds[1]), cmds[2]));
-        } else if (cmds[0] == "d" || cmds[0] == "delete") {
-            if (!check_argc(cmds.size(), {2})) continue;
-            check_result(delete_line(lines, stoi(cmds[1])));
-        } else if (cmds[0] == "e" || cmds[0] == "edit") {
-            if (!check_argc(cmds.size(), {3})) continue;
-            check_result(replace_line(lines, stoi(cmds[1]), cmds[2]));
-        } else if (cmds[0] == "l" || cmds[0] == "list") {
-            if (!check_argc(cmds.size(), {1})) continue;
-            check_result(output_lines(cout, lines, true));
-        } else if (cmds[0] == "r" || cmds[0] == "reload") {
-            if (!check_argc(cmds.size(), {1,2})) continue;
-            string name = cmds.size() == 1 ? filename : cmds[1];
-            check_result(read_lines(name, lines));
-        } else if (cmds[0] == "w" || cmds[0] == "write") {
-            if (!check_argc(cmds.size(), {1, 2})) continue;
-            string name = cmds.size() == 1 ? filename : cmds[1];
-            ofstream file(name);
-            check_result(output_lines(file, lines));
-            file.close();
-        } else if (cmds[0] == "q" || cmds[0] == "quit") {
-            if (!check_argc(cmds.size(), {1})) continue;
-            break;
-        } else {
-            output_error(cerr, "Invalid command\n");
-        }
+        } 
+        //else if ...
+        // TODO: complete this function
+        /* Your Code Here */
+        
     }
 }
