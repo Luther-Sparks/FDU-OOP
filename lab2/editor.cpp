@@ -8,14 +8,20 @@
 using namespace std;
 
 /**
- * @brief Read lines from is and store them in lines.
- *
- * @param is input stream, usually ifstream
- * @param lines
+ * @brief Read lines from filename
+ * 
+ * @param filename file to be opened
+ * @param lines store each line of file
  * @return true if success
- * @return false if something goes wrong, e.g. is is not open
+ * @return false if something goes wrong, e.g. os is not open
  */
-bool read_lines(istream &is, list<string> &lines) {
+bool read_lines(const string& filename, list<string> &lines) {
+    ifstream is(filename);
+    if (!is) {
+        output_error(cerr, "Runtime error\n");
+        return false;
+    }
+    lines.clear();
     string line;
     while (getline(is, line)) {
         lines.push_back(line);
@@ -33,6 +39,10 @@ bool read_lines(istream &is, list<string> &lines) {
  * @return false if something goes wrong, e.g. os is not open
  */
 bool output_lines(ostream &os, const list<string> &lines, bool show_line_num = false) {
+    if (!os) {
+        output_error(cerr, "Runtime error\n");
+        return false;
+    }
     int i = 1;
     for (const string &line : lines) {
         if (show_line_num) {
@@ -72,7 +82,7 @@ bool delete_line(list<string> &lines, int line_num) {
  * @return false something goes wrong, e.g. line_num is out of range.
  */
 bool insert_line(list<string> &lines, int line_num, const string &line) {
-    if (line_num <= 0 || line_num > (int)lines.size()) {
+    if (line_num <= 0 || line_num > (int)lines.size() + 1) {
         output_error(cerr, "Runtime error\n");
         return false;
     }
@@ -112,7 +122,7 @@ bool replace_line(list<string> &lines, int line_num, const string &line) {
  * @param expect_count the expected number of arguments
  * @return true when argc is in expect_count otherwise false
  */
-inline bool check_argc(int argc, vector<int> expect_count) {
+inline bool check_argc(vector<string>::size_type argc, vector<int> expect_count) {
     if (find(expect_count.begin(), expect_count.end(), argc) != expect_count.end()) {
         return true;
     }
@@ -141,7 +151,8 @@ inline void check_result(bool result) {
  *        4. l/list // List all lines with line number
  *        5. w/write [filename] // Write the file to [filename],
  *        if [filename] is not specified, we will use the original file name
- *        6. r/reload // Reload the file
+ *        6. r/reload [filename] // Reload the file from [filename]
+ *        if [filename] is not specified, we will use the original file name
  *        7. q/quit // Quit
  *
  *        Note:
@@ -156,14 +167,14 @@ inline void check_result(bool result) {
  * @param is
  * @param filename
  */
-void main_loop(istream &is, const string &filename) {
+void main_loop(const string &filename) {
     list<string> lines;
-    read_lines(is, lines);
+    read_lines(filename, lines);
     while (true) {
         cout << "> ";
         string cmd;
         getline(cin, cmd);
-        vector<string> cmds = split(cmd, ' ');
+        vector<string> cmds = split(cmd, ' ', 3);
         if (cmds[0] == "i" || cmds[0] == "insert") {
             if (!check_argc(cmds.size(), {3})) continue;
             check_result(insert_line(lines, stoi(cmds[1]), cmds[2]));
@@ -177,13 +188,15 @@ void main_loop(istream &is, const string &filename) {
             if (!check_argc(cmds.size(), {1})) continue;
             check_result(output_lines(cout, lines, true));
         } else if (cmds[0] == "r" || cmds[0] == "reload") {
-            if (!check_argc(cmds.size(), {1})) continue;
-            check_result(read_lines(is, lines));
+            if (!check_argc(cmds.size(), {1,2})) continue;
+            string name = cmds.size() == 1 ? filename : cmds[1];
+            check_result(read_lines(name, lines));
         } else if (cmds[0] == "w" || cmds[0] == "write") {
             if (!check_argc(cmds.size(), {1, 2})) continue;
             string name = cmds.size() == 1 ? filename : cmds[1];
             ofstream file(name);
-            check_result(output_lines(file, lines) && read_lines(is, lines));  // Sync the file
+            check_result(output_lines(file, lines));
+            file.close();
         } else if (cmds[0] == "q" || cmds[0] == "quit") {
             if (!check_argc(cmds.size(), {1})) continue;
             break;

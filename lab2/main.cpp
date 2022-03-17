@@ -40,16 +40,17 @@ int main(int argc, char *argv[]) {
                 return -1;
             }
             newfile.close();
-            file.open(filename);
+        } else {
+            file.close();
         }
         // Run the main loop
-        main_loop(file, filename);
+        main_loop(filename);
     } else {
-// #ifdef __WIN32__
-//         cerr << "Usage: ./editor.exe [filename]" << endl;
-// #else
-//         cerr << "Usage: ./editor [filename]" << endl;
-// #endif
+#ifdef __WIN32__
+        cerr << "Usage: ./editor.exe [filename]" << endl;
+#else
+        cerr << "Usage: ./editor [filename]" << endl;
+#endif
         return -1;
     }
     return 0;

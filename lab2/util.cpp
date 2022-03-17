@@ -4,20 +4,32 @@
 using namespace std;
 
 /**
- * @brief split string by delimiter
- * e.g "1,2,3,4" by "," => [1,2,3,4]
+ * @brief split single line string (Do not contain "\n") by delimiter to at most max_part
+ * e.g "1,2,3,4" by "," at most 4 part => ["1","2","3","4"]
+ *     "1,2,3,4" by "," at most 5 part => ["1","2","3","4"]
+ *     "1,2,3,4" by "," at most 3 part => ["1","2","3,4"]
  * @param str any string
  * @param delim any char delimiter
+ * @param max_part
  * @return vector<string> containing splitted string
  */
-vector<string> split(const string& str, char delim) {
+vector<string> split(const string& str, char delim, int max_part) {
     vector<string> res;
     // TODO: complete this function
     /* Your Code Here */
     stringstream ss(str);
     string item;
+    int i = 0;
     while (getline(ss, item, delim)) {
         res.push_back(item);
+        i++;
+        if(i == max_part-1){
+            //Push rest of string into item
+            if(getline(ss, item)) {
+                res.push_back(item);
+            }
+            break;
+        }
     }
     return res;
 }
