@@ -100,10 +100,9 @@ bool replace_line(list<string> &lines, int line_num, const string &line) {
  * @return true when argc is in expect_count otherwise false
  */
 inline bool check_argc(vector<string>::size_type argc, vector<int> expect_count) {
-    if (find(expect_count.begin(), expect_count.end(), argc) != expect_count.end()) {
-        return true;
-    }
-    output_error(cerr, "Invalid command\n");
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return false;
 }
 /**
@@ -159,6 +158,6 @@ void main_loop(const string &filename) {
         //else if ...
         // TODO: complete this function
         /* Your Code Here */
-        
+
     }
 }
