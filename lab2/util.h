@@ -2,6 +2,7 @@
 #define UTIL_H
 #include <string>
 #include <vector>
+#include <climits>
 using namespace std;
 
 vector<string> split(const string& str, char delim, int max_part = INT_MAX);

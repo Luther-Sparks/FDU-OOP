@@ -514,6 +514,8 @@ def init_result(handin: bool):
                                      capture_output=True,
                                      check=True,
                                      universal_newlines=True).stdout
+    # Get python version
+    result["python"] = sys.version
 
 
 def write_standard_json():
@@ -563,7 +565,7 @@ def handin():
         shutil.copy(file, handin_dir)
     shutil.make_archive(handin_dir, "zip", root_dir=os.getcwd(), base_dir=handin_dir)
     shutil.rmtree(handin_dir)
-    logging.info("Handin complete.")
+    logging.info(f"Handin complete. Write to {handin_dir}.zip")
 
 
 def main(args):
