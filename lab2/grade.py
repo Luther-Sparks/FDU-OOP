@@ -9,8 +9,6 @@ import datetime
 import platform
 import argparse
 
-from parso import parse
-from sympy import arg, false
 
 # exit if python2
 if sys.version_info[0] < 3:
@@ -564,7 +562,7 @@ def handin():
     os.makedirs(handin_dir)
     for file in ["CMakeLists.txt", "editor.cpp", "editor.h", "main.cpp", "util.cpp", "util.h", "result.json"]:
         shutil.copy(file, handin_dir)
-    shutil.make_archive(handin_dir, "zip", handin_dir, ".")
+    shutil.make_archive(handin_dir, "zip", root_dir=os.getcwd(), base_dir=handin_dir)
     shutil.rmtree(handin_dir)
     logging.info("Handin complete.")
 
