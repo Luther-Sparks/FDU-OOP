@@ -414,7 +414,7 @@ def clean_up(clean):
 
 
 
-def run_executable(stdin: str, args: list[str]) -> Tuple[str, str]:
+def run_executable(stdin: str, args: List[str]) -> Tuple[str, str]:
     """
     Run the executable with the given stdin, return stdout and stderr.
     """
