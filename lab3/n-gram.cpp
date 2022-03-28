@@ -37,7 +37,7 @@ vector<vector<int>> get_n_gram_matrix(vector<string>& words, vector<string>& n_g
     cout << "Now we have all the words and n-grams." << endl;
     cout << "There are " << words.size() << " words." << endl;
     cout << "We should clean our data." << endl;
-    cout << "If a word appears less than 5 times, we will replace it with [unk]." << endl;
+    cout << "If a word appears less than 15 times, we will replace it with [unk]." << endl;
     replace_if(words.begin(), words.end(), [](string s) {
         return word_count[s] < 15;
     }, "unk");

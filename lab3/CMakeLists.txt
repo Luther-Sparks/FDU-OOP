@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(lab3
-        n-gram.cpp)
+add_executable(n_gram
+        main.cpp
+        util.cpp
+        grams.cpp)
         
