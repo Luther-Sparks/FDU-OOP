@@ -9,12 +9,10 @@ import datetime
 import platform
 import argparse
 
-from parso import parse
-from sympy import arg, false
 
 # exit if python2
-if sys.version_info[0] < 3:
-    print("This program requires Python 3. Please contact TA for help.")
+if sys.version_info[0] < 3 and sys.version_info[1] < 7:
+    print("This program requires Python 3.7. Please contact TA for help.")
     sys.exit(1)
 
 standard_json = r"""{
@@ -183,7 +181,7 @@ standard_json = r"""{
             "other": "other"
         },
         {
-            "test": "command_test2 1",
+            "test": "command_test21",
             "stdin": "i 2 test21\ne 3 test21\nd 1\nw\nr test/other.txt\nl\nq\n",
             "stdout": "> \u001b[32mOK\n\u001b[0m> \u001b[32mOK\n\u001b[0m> \u001b[32mOK\n\u001b[0m> \u001b[32mOK\n\u001b[0m> \u001b[32mOK\n\u001b[0m> 1: other\n\u001b[32mOK\n\u001b[0m> ",
             "stderr": "",
@@ -331,7 +329,7 @@ tests = [
     ("command_test19", ["i 2 test19", "e 3 test19", "d 1", "r", "l"]),
     ("command_test20", ["i 2 test20", "e 3 test20",
                         "d 1", f"r {test_dir}/other.txt", "l"]),
-    ("command_test2 1", ["i 2 test21", "e 3 test21",
+    ("command_test21", ["i 2 test21", "e 3 test21",
                         "d 1", "w", f"r {test_dir}/other.txt", "l"]),
     ("command_test22", ["i 2 test22", "e 3 test22",
                         "d 1", "w", "r", f"r {test_dir}/other.txt", "l"]),
@@ -394,12 +392,11 @@ def build_executable():
         subprocess.run(["make"], check=True,  stdout=subprocess.DEVNULL)
         # Return to parent directory
         os.chdir("..")
+        logging.info("Build successful.")
     except Exception as e:
         logging.error("something went wrong when building the executable.")
         logging.error(e)
         sys.exit(1)
-    finally:
-        logging.info("Build successful.")
 
 
 def clean_up(clean):
@@ -414,7 +411,7 @@ def clean_up(clean):
 
 
 
-def run_executable(stdin: str, args: list[str]) -> Tuple[str, str]:
+def run_executable(stdin: str, args: List[str]) -> Tuple[str, str]:
     """
     Run the executable with the given stdin, return stdout and stderr.
     """
@@ -517,6 +514,8 @@ def init_result(handin: bool):
                                      capture_output=True,
                                      check=True,
                                      universal_newlines=True).stdout
+    # Get python version
+    result["python"] = sys.version
 
 
 def write_standard_json():
@@ -564,9 +563,9 @@ def handin():
     os.makedirs(handin_dir)
     for file in ["CMakeLists.txt", "editor.cpp", "editor.h", "main.cpp", "util.cpp", "util.h", "result.json"]:
         shutil.copy(file, handin_dir)
-    shutil.make_archive(handin_dir, "zip", handin_dir, ".")
+    shutil.make_archive(handin_dir, "zip", root_dir=os.getcwd(), base_dir=handin_dir)
     shutil.rmtree(handin_dir)
-    logging.info("Handin complete.")
+    logging.info(f"Handin complete. Write to {handin_dir}.zip")
 
 
 def main(args):
