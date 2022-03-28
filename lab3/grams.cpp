@@ -60,14 +60,6 @@ size_t record_words(const string& filename, vector<string>& words) {
 size_t record_grams(const vector<string>& words, vector<string>& grams, int n) {
     // TODO: implement this function
     /* Your code here */
-    for (int i = 0, j = i+n; j <= words.size(); i++, j++) {
-        string gram = "";
-        for (int k = i; k < j-1; k++) {
-            gram += words[k] + " ";
-        }
-        gram += words[j-1];
-        grams.emplace_back(gram);
-    }
     return grams.size();
 }
 
@@ -85,11 +77,6 @@ size_t record_grams(const vector<string>& words, vector<string>& grams, int n) {
 size_t set_word_index(const vector<string>& words, map<string, int>& word_index) {
     // TODO: implement this function
     /* Your code here */
-    auto tmpset = set<string>(words.begin(), words.end());
-    auto dup_words = vector<string>(tmpset.begin(), tmpset.end());
-    for (int i = 0; i < dup_words.size(); i++) {
-        word_index[dup_words[i]] = i;
-    }
     return word_index.size();
 }
 
@@ -106,19 +93,6 @@ size_t set_word_index(const vector<string>& words, map<string, int>& word_index)
 void set_coocur_matrix(const vector<string>& grams, const map<string, int>& word_index, vector<vector<int>>& coocur_matrix) {
     // TODO: impelement this function. Store the co-occurrence matrix in the `coocur_matrix` vector.
     /* Your code here */
-    coocur_matrix = vector<vector<int>>(grams.size(), vector<int>(grams.size(), 0));
-    for (auto gram : grams) {
-        vector<string> tmp;
-        spilt_string(gram, tmp);
-        int n = tmp.size();
-        int center = (n + 1) / 2;                        // the center of the gram, which is the word we want to count.(I call it key here.)
-        int key_index = word_index.at(tmp[center]);      // the index of the key word in the co-ocurrence matrix
-        for (int i = 0; i < n; i++) {
-            if (i == center) continue;
-            int index = word_index.at(tmp[i]);
-            coocur_matrix[key_index][index]++;
-        }
-    }
     return;
 }
 
@@ -136,13 +110,6 @@ void set_coocur_matrix(const vector<string>& grams, const map<string, int>& word
 void normalize_matrix(const vector<vector<int>>& coocur_matrix, vector<vector<double>>& normalized_matrix) {
     // TODO: implement this function
     /* Your code here */
-    normalized_matrix = vector<vector<double>>(coocur_matrix.size(), vector<double>(coocur_matrix[0].size(), 0.0));
-    for (int i = 0; i < coocur_matrix.size(); i++) {
-        double row_sum = accumulate(coocur_matrix[i].begin(), coocur_matrix[i].end(), 0.0);
-        for (int j = 0; j < coocur_matrix[0].size(); j++) {
-            normalized_matrix[i][j] = (double)coocur_matrix[i][j] / row_sum;
-        }
-    }
 }
 
 /**
@@ -162,22 +129,6 @@ void normalize_matrix(const vector<vector<int>>& coocur_matrix, vector<vector<do
 void save_matrix(const string& filename, const vector<vector<double>>& matrix, const map<string, int>& word_index) {
     // TODO: save the normalized_matrix to file `result.txt`. Notice that the first row should be the words.
     /* Your code here */
-    ofstream file(filename);
-    if (!file.good()) {
-        cout << "Error: cannot open file " << filename << endl;
-        return;
-    }
-    for (auto it = word_index.begin(); it != word_index.end(); it++) {
-        file << it->first << " ";
-    }
-    file << endl;
-    for (int i = 0; i < matrix.size(); i++) {
-        for (int j = 0; j < matrix[0].size(); j++) {
-            file << matrix[i][j] << " ";
-        }
-        file << endl;
-    }
-    file.close();
 }
 
 /**
@@ -197,33 +148,6 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
     // hint: you can refer to the `set_word_index` function and `split_string` function.
     // TODO: restore the normalized_matrix from file `result.txt`.
     /* Your code here */
-    // TODO: clean this function.
-    ifstream file(filename);
-    if (!file.good()) {
-        cerr << "Error: cannot open file " << filename << endl;
-        exit(1);
-    }
-    string line;
-    regex _regex("\\s");
-    getline(file, line);
-    sregex_token_iterator regex_iter(line.begin(), line.end(), _regex, -1);
-    sregex_token_iterator end;
-    int index = 0;
-    while (regex_iter != end) {
-        index_word[index++] = *regex_iter;
-        ++regex_iter;
-    }
-    while (getline(file, line)) {
-        vector<double> row;
-        sregex_token_iterator regex_iter(line.begin(), line.end(), _regex, -1);
-        sregex_token_iterator end;
-        while (regex_iter != end) {
-            row.emplace_back(stod(*regex_iter));
-            ++regex_iter;
-        }
-        matrix.emplace_back(row);
-    }
-    file.close();
     return;
 }
 
@@ -246,28 +170,4 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
 vector<string> most_similar(const string& word, const vector<vector<double>>& matrix, const map<int, string>& index_word) {
     // TODO: implement this function. 
     /* Your code here */
-    vector<pair<int, double>> similarities;
-    auto iter = find_if(index_word.begin(), index_word.end(), [&](const pair<int, string>& p) {
-        return p.second == word;
-    });
-    if (iter == index_word.end()) {
-        cerr << "Error: cannot find word " << word << endl;
-        return vector<string>();
-    }
-    int index = iter->first;
-    for (int i = 0; i < matrix.size(); i++) {
-        double sum = 0.0;
-        for (int j = 0; j < matrix[0].size(); j++) {
-            sum += pow(matrix[i][j] - matrix[index][j], 2);
-        }
-        similarities.emplace_back(make_pair(i, sqrt(sum)));
-    }
-    sort(similarities.begin(), similarities.end(), [&](pair<int, double> x, pair<int, double> y) {
-        return (x.second > y.second) || (x.second == y.second && x.first < y.first);
-    });
-    vector<string> res;
-    for (int i = 0; i < similarities.size() && i < 5; i++) {
-        res.emplace_back(index_word.at(similarities[i].first));
-    }
-    return res;
 }
