@@ -28,7 +28,7 @@ void train(const int& n, const string& filename) {
 }
 
 void test(const string& testfile, const string& matrix_file) {
-    restore_matrix(matrix_file, normalized_matrix, word_index);
+    restore_matrix(matrix_file, normalized_matrix, index_word);
     // Now you should try to use the normalized matrix to find the most similar words.
     // We believe that the more similar the words are, the more likely they have the same context.
     // In this case, you can use this method to find the most similar words.
@@ -43,6 +43,7 @@ void test(const string& testfile, const string& matrix_file) {
     while (getline(file, word)) {
         test_words.emplace_back(word);
     }
+    file.close();
     // Now, we shall find the 5 most similar words for each word in the test file.
     ofstream outfile("output.txt");
     if (!outfile.good()) {
@@ -50,12 +51,13 @@ void test(const string& testfile, const string& matrix_file) {
         exit(1);
     }
     for (auto w : test_words) {
-        auto vec = most_similar(w, normalized_matrix, word_index);
+        auto vec = most_similar(w, normalized_matrix, index_word);
         for (auto item : vec) {
             outfile << item << " ";
         }
         outfile << endl;
     }
+    outfile.close();
     return;
 }
 
