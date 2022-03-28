@@ -534,7 +534,7 @@ def compare_json():
     assert len(student_result) == len(standard_result), "The number of tests is not the same. Please contact TA"
     fault_tests = []
     for i in range(len(student_result)):
-        if student_result[i] != standard_result[i]:
+        if str(student_result[i]).strip() != str(standard_result[i]).strip():
             fault_tests.append(student_result[i]["test"])
     if len(fault_tests) == 0:
         logging.info("All tests passed.")
