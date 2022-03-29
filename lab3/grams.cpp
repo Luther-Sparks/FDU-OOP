@@ -172,11 +172,16 @@ void set_coocur_matrix(const vector<string>& words, const map<string, int>& word
 void normalize_matrix(const vector<vector<int>>& coocur_matrix, vector<vector<double>>& normalized_matrix) {
     // TODO: implement this function
     /* Your code here */
+    vector<double> col_sum = vector<double>(coocur_matrix[0].size(), 0.0);
     normalized_matrix = vector<vector<double>>(coocur_matrix.size(), vector<double>(coocur_matrix[0].size(), 0.0));
     for (int i = 0; i < coocur_matrix.size(); i++) {
-        double row_sum = accumulate(coocur_matrix[i].begin(), coocur_matrix[i].end(), 0.0);
         for (int j = 0; j < coocur_matrix[0].size(); j++) {
-            normalized_matrix[i][j] = (double)coocur_matrix[i][j] / row_sum;
+            col_sum[j] += coocur_matrix[i][j];
+        }
+    }
+    for (int i = 0; i < coocur_matrix.size(); i++) {
+        for (int j = 0; j < coocur_matrix[0].size(); j++) {
+            normalized_matrix[i][j] = (double)coocur_matrix[i][j] / col_sum[j];
         }
     }
 }
@@ -290,12 +295,21 @@ vector<string> most_similar(const string& word, const vector<vector<double>>& ma
         return vector<string>();
     }
     int index = iter->first;
+    double index_norm = 0.0;
+    for (int i = 0; i < matrix[0].size(); i++) {
+        index_norm += matrix[index][i] * matrix[index][i];
+    }
+    index_norm = sqrt(index_norm);
     for (int i = 0; i < matrix.size(); i++) {
         double sum = 0.0;
+        double norm = 0.0;
         for (int j = 0; j < matrix[0].size(); j++) {
-            sum += abs(matrix[i][j] - matrix[index][j]);
+            sum += matrix[i][j] * matrix[index][j];
+            norm += matrix[i][j] * matrix[i][j];
         }
-        similarities.emplace_back(make_pair(i, sqrt(sum)));
+        norm = sqrt(norm);
+        double res = (index_norm * norm == 0) ? 0 : sum / (index_norm * norm);
+        similarities.emplace_back(make_pair(i, sqrt(res)));
     }
     sort(similarities.begin(), similarities.end(), [&](pair<int, double> x, pair<int, double> y) {
         return (x.second > y.second) || (x.second == y.second && x.first < y.first);
