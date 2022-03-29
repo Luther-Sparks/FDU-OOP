@@ -9,12 +9,13 @@ using namespace std;
 
 // define some global variables
 vector<string> words;                       // all words, sort by appearance order
-vector<string> grams;                       // all grams, sort by appearance order
+vector<pair<string, int>> freq;             // frequency of coocurrence of each word
 // for simplicity, each row of the co-occurrence matrix represents the word by lexicographical order
 // thus, we'd use a map to store the index of the word which is `word_index`
-map<string, int> word_index;                // index of word in co-occurrence matrix
+map<string, int> word_index;                // mapping the word to the index in the co-occurrence matrix
+map<int, string> index_word;                // mapping the index to the word in the co-occurrence matrix
 vector<vector<int>> coocur_matrix;          // co-ocurrence martix, each row is a n-gram
-vector<vector<double>> normalized_matrix;    // normalized co-ocurrence martix
+vector<vector<double>> normalized_matrix;   // normalized co-ocurrence martix
 // You can add more global variables here if you need.
 // Notice that if you add more global variables, you should declare them in the `grams.h` using `extern`
 
@@ -42,33 +43,57 @@ size_t record_words(const string& filename, vector<string>& words) {
 }
 
 /**
- * @brief record all grams in the `words` vector and store them in the vector `grams` by the appearance order.
- * Later we will use the `grams` vector to construct the co-occurrence matrix.
- * e.g. :
- *  if we have a sentence like: `I like to eat apple`
- *  and our n is 2, then we can form the gram `I like` and `like to` and etc.
- * 
- * words = ["I", "like", "to", "eat", "apple"]
- * grams = ["I like", "like to", "to eat", "eat apple"]         // n equals 2
- * grams = ["I like to", "like to eat", "to eat apple"]         // n equals 3
+ * @brief go through the vector `words` and record the frequency of each word.
+ * e.g.:
+ *  words = ["a", "a", "b", "c", "d", "e", "e"]
+ *  freq = [("a", 2), ("b", 1), ("c", 1), ("d", 1), ("e", 2)]
  * 
  * @param words     vector of words
- * @param grams     vector to store the grams
- * @param n         hyperparameter `n`
- * @return size_t   the size of the `grams` vector
+ * @param freq      vector to store the frequency of each word
+ * @return size_t   the size of the `freq` vector
  */
-size_t record_grams(const vector<string>& words, vector<string>& grams, int n) {
-    // TODO: implement this function
+size_t record_freq(const vector<string>& words, vector<pair<string, int>>& freq) {
+    // TODO: impelement this function.
     /* Your code here */
-    for (int i = 0, j = i+n; j <= words.size(); i++, j++) {
-        string gram = "";
-        for (int k = i; k < j-1; k++) {
-            gram += words[k] + " ";
+    map<string, int> word_freq;
+    for (auto word : words) {
+        if (word_freq.find(word) == word_freq.end()) {
+            word_freq[word] = 1;
+        } else {
+            word_freq[word]++;
         }
-        gram += words[j-1];
-        grams.emplace_back(gram);
     }
-    return grams.size();
+    for (auto word_freq_pair : word_freq) {
+        freq.push_back(word_freq_pair);
+    }
+    return freq.size();
+}
+
+/**
+ * @brief Filter out the 3000 most frequent words.
+ * !!Notice that if a word is not in the 3000 most frequent words, it should be replaced by `<unk>`.
+ * 
+ * @param freq      vector of words and their frequency
+ * @param words     original vector of words. You should change the vector `words` to keep the 3000 most frequent words.
+ */
+void filter_words(vector<pair<string, int>>& freq, vector<string>& words) {
+    // hint: you can use function `sort` to sort the vector `freq` by modify the compare function.
+    // if you want to write a compare function more gracefully, you can try to use `lambda expression`(It's a new feature in C++11.).
+    // TODO: implement this function.
+    /* Your code here */
+    sort(freq.begin(), freq.end(), [](pair<string, int>& a, pair<string, int>& b) {
+        return (a.second > b.second) || (a.second == b.second && a.first < b.first);
+    });
+    set<string> word_set;
+    for (auto i = 0; i < freq.size() && i < 300; i++) {
+        word_set.insert(freq[i].first);
+    }
+    for (auto i = 0; i < words.size(); i++) {
+        if (word_set.find(words[i]) == word_set.end()) {
+            words[i] = "<unk>";
+        }
+    }
+    return;
 }
 
 /**
@@ -95,28 +120,39 @@ size_t set_word_index(const vector<string>& words, map<string, int>& word_index)
 
 /**
  * @brief Set up the coocur matrix object. 
- * Notice that you may need more data structure to implement this functions.
- * Thus, you are free to modify the signature of this function and I strongly suggest you to do so.
- * If you need to define a new data structure to store the data, you should define it as a global variable in the `grams.cpp` file.
+ * Each row of the coocur matrix represents the word by lexicographical order. 
+ * The value of each element in the co-occurrence matrix is the number of times that two words appear together.
+ * e.g. :
+ * consider n as 3,
+ * words: ["<unk>", "I", "like", "to", "eat", "apple", "<unk>"]
+ * coocur_matrix:   (sorted by lexicographical order. Thus, these rows represent the words ["<unk>", "I", "apple", "eat", "like", "to"])
+ * coocur_matrix[1][4] == 1 represents that if consider "I" as center word, the number of times that "I" and "like" appear together is 1.
+ * [0, 1, 1, 0, 0, 0]
+ * [1, 0, 0, 0, 1, 0]
+ * [1, 0, 0, 1, 0, 0]
+ * [0, 0, 1, 0, 0, 1]
+ * [0, 1, 0, 0, 0, 1]
+ * [0, 0, 0, 1, 1, 0]
  * 
- * @param grams             vector of grams
+ * @param words             vector of words
  * @param word_index        map of word index
  * @param coocur_matrix     vector of vector to store the co-occurrence matrix
+ * @param n                 hyper-parameter of n-gram
  */
-void set_coocur_matrix(const vector<string>& grams, const map<string, int>& word_index, vector<vector<int>>& coocur_matrix) {
+void set_coocur_matrix(const vector<string>& words, const map<string, int>& word_index, vector<vector<int>>& coocur_matrix, int n) {
     // TODO: impelement this function. Store the co-occurrence matrix in the `coocur_matrix` vector.
     /* Your code here */
-    coocur_matrix = vector<vector<int>>(grams.size(), vector<int>(grams.size(), 0));
-    for (auto gram : grams) {
-        vector<string> tmp;
-        spilt_string(gram, tmp);
-        int n = tmp.size();
-        int center = (n + 1) / 2;                        // the center of the gram, which is the word we want to count.(I call it key here.)
-        int key_index = word_index.at(tmp[center]);      // the index of the key word in the co-ocurrence matrix
-        for (int i = 0; i < n; i++) {
-            if (i == center) continue;
-            int index = word_index.at(tmp[i]);
-            coocur_matrix[key_index][index]++;
+    int size = words.size();
+    coocur_matrix = vector<vector<int>>(word_index.size(), vector<int>(word_index.size(), 0));
+    for (int left = 0, right = n, center = (n + 1) / 2; right <= size; left++, right++, center++) {
+        cout << (double)center/size << '\r';
+        for(int i = left; i < right; i++) {
+            if (i == center) {
+                continue;
+            }
+            int i_index = word_index.at(words[i]);
+            int center_index = word_index.at(words[center]);
+            coocur_matrix[center_index][i_index]++;
         }
     }
     return;
@@ -197,7 +233,6 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
     // hint: you can refer to the `set_word_index` function and `split_string` function.
     // TODO: restore the normalized_matrix from file `result.txt`.
     /* Your code here */
-    // TODO: clean this function.
     ifstream file(filename);
     if (!file.good()) {
         cerr << "Error: cannot open file " << filename << endl;
@@ -258,7 +293,7 @@ vector<string> most_similar(const string& word, const vector<vector<double>>& ma
     for (int i = 0; i < matrix.size(); i++) {
         double sum = 0.0;
         for (int j = 0; j < matrix[0].size(); j++) {
-            sum += pow(matrix[i][j] - matrix[index][j], 2);
+            sum += abs(matrix[i][j] - matrix[index][j]);
         }
         similarities.emplace_back(make_pair(i, sqrt(sum)));
     }

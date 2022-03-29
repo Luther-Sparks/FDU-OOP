@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// TODO: 加上3000词的限定，选出频度最高的3000词，引导使用vector<pair<word, freq>>
+
 /**
  * @brief train the model.
  * 
@@ -12,13 +14,19 @@ using namespace std;
  */
 void train(const int& n, const string& filename) {
     record_words(filename, words);          // record all words
+    cout << "done with record_words" << endl;
     // padding the words vector with word `<unk>`
     for (auto i = 0; i < n - 1; i++) {
         words.insert(words.begin(), "<unk>");
     }
-    record_grams(words, grams, n);                          // record all grams
+    record_freq(words, freq);                               // record the frequency of each word
+    cout << "done with record_freq" << endl;
+    filter_words(freq, words);                              // filter the less frequent words by replacing them by `<unk>`
+    cout << "done with filter_words" << endl;
     set_word_index(words, word_index);                      // store the index of the word in the matrix
-    set_coocur_matrix(grams, word_index, coocur_matrix);    // store the co-occurrence matrix
+    cout << "done with set_word_index" << endl;
+    set_coocur_matrix(words, word_index, coocur_matrix, n); // store the co-occurrence matrix
+    cout << "done with set_coocur_matrix" << endl;
     normalize_matrix(coocur_matrix, normalized_matrix);     // normalize the matrix
 
     // Now we have the 	normalized co-occurrence matrix, we can use it to do some cool stuff.
@@ -58,6 +66,7 @@ void test(const string& testfile, const string& matrix_file) {
         outfile << endl;
     }
     outfile.close();
+    
     return;
 }
 
