@@ -17,20 +17,7 @@ vector<string> split(const string& str, char delim, int max_part) {
     vector<string> res;
     // TODO: complete this function
     /* Your Code Here */
-    stringstream ss(str);
-    string item;
-    int i = 0;
-    while (getline(ss, item, delim)) {
-        res.push_back(item);
-        i++;
-        if(i == max_part-1){
-            //Push rest of string into item
-            if(getline(ss, item)) {
-                res.push_back(item);
-            }
-            break;
-        }
-    }
+    
     return res;
 }
 
@@ -54,6 +41,8 @@ ostream& output_info(ostream& os, const string& str) {
  * @return ostream& the original output stream
  */
 ostream& output_error(ostream& os, const string& str) {
-    os << "\033[31m" << str << "\033[0m";
+    // TODO: complete this function
+    /* Your Code Here */
+    
     return os.flush();
 }

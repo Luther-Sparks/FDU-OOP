@@ -31,18 +31,12 @@ int main(int argc, char *argv[]) {
         } else if (argc == 2) {
             filename = argv[1];
         }
-        // Open the file or create a new file
-        ifstream file(filename);
-        if (!file.is_open()) {
-            ofstream newfile(filename);
-            if (!newfile.is_open()) {
-                cout << "Error: Cannot create file " << filename << endl;
-                return -1;
-            }
-            newfile.close();
-        } else {
-            file.close();
-        }
+        // If the file do not exist, create it first
+        // TODO: complete this function
+        /* Your Code Here */
+        
+
+
         // Run the main loop
         main_loop(filename);
     } else {
