@@ -145,7 +145,7 @@ void set_coocur_matrix(const vector<string>& words, const map<string, int>& word
     /* Your code here */
     int size = words.size();
     coocur_matrix = vector<vector<int>>(word_index.size(), vector<int>(word_index.size(), 0));
-    for (int left = 0, right = n, center = (n + 1) / 2 - 1; right <= size; left++, right++, center++) {
+    for (int left = 0, right = n, center = (n + 1) / 2; right <= size; left++, right++, center++) {
         cout << (double)center/size << '\r';
         for(int i = left; i < right; i++) {
             if (i == center) {
@@ -326,7 +326,7 @@ vector<string> most_similar(const string& word, const vector<vector<double>>& ma
     }
     int index = iter->first;
     for (size_t i = 0; i < matrix.size(); i++) {
-        // if ((int)i == index) continue;
+        if ((int)i == index) continue;
         double res = similarity(matrix, index, i);
         similarities.emplace_back(make_pair(i, res));
     }
