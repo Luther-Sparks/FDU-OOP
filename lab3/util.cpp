@@ -14,6 +14,7 @@ using namespace std;
 void spilt_string(const string& s, vector<string>& ret) {
     // hint: you can use function `substr` to get a substring of the string `s`
     //       if you know what regular expression is, you can use `regex` to easily split the string `s`
+    //       stringstream may be useful, too
     // TODO: implement this function
     /* Your code here */
     regex word_regex("\\s");

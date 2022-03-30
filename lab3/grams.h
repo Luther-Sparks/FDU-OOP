@@ -25,6 +25,7 @@ void set_coocur_matrix(const vector<string>& words, const map<string, int>& word
 void normalize_matrix(const vector<vector<int>>& coocur_matrix, vector<vector<double>>& normalized_matrix);
 void save_matrix(const string& filename, const vector<vector<double>>& matrix, const map<string, int>& word_index);
 void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<int, string>& index_word);
+double similarity(const vector<vector<double>>& matrix, size_t i, size_t j);
 vector<string> most_similar(const string& word, const vector<vector<double>>& matrix, const map<int, string>& index_word);
 
 #endif // !GRAMS_H

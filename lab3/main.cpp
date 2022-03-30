@@ -1,10 +1,9 @@
 #include <iostream>
+#include <cstring>
 #include "util.h"
 #include "grams.h"
 
 using namespace std;
-
-// TODO: 加上3000词的限定，选出频度最高的3000词，引导使用vector<pair<word, freq>>
 
 /**
  * @brief train the model.
@@ -31,7 +30,7 @@ void train(const int& n, const string& filename) {
 
     // Now we have the 	normalized co-occurrence matrix, we can use it to do some cool stuff.
     // We want to save the normalized matrix to a file, so that we can use it later.
-    save_matrix("result.txt", normalized_matrix, word_index);
+    save_matrix("matrix.txt", normalized_matrix, word_index);
     return;
 }
 
@@ -71,31 +70,32 @@ void test(const string& testfile, const string& matrix_file) {
 }
 
 int main(int argc, const char** argv) {
-    if (strcmp(argv[argc-1], "--train") != 0 && strcmp(argv[argc-1], "--test") != 0) {
+    if (strcmp(argv[1], "--train") != 0 && strcmp(argv[1], "--test") != 0) {
         cout << "Invalid input" << endl;
-        cout << "Usage: ./gram <n> <input file> --train" << endl;
-        cout << "       ./gram <test file> <matrix file> --test" << endl;
+        cout << "Usage: ./n_gram --train <n> <input file>" << endl;
+        cout << "       ./n_gram --test <test file> <matrix file>" << endl;
         return 1;
     }
-    if (strcmp(argv[argc-1], "--train") == 0) {
+    if (strcmp(argv[1], "--train") == 0) {
         if (argc != 4) {
             cout << "Invalid input" << endl;
-            cout << "Usage: ./gram <n> <input file> --train" << endl;
+            cout << "Usage: .n_/gram --train <n> <input file>" << endl;
             return 1;
         }
-        int n = stoi(argv[1]);                  // hyperparameter `n`
-        string filename = argv[2];              // the input file name
+        int n = stoi(argv[2]);                  // hyperparameter `n`
+        string filename = argv[3];              // the input file name
         train(n, filename);
     }
     else {
         if (argc != 4) {
             cout << "Invalid input" << endl;
-            cout << "Usage: ./gram <test file> <matrix file> --test" << endl;
+            cout << "Usage: ./n_gram --test <test file> <matrix file>" << endl;
             return 1;
         }
-        string test_file = argv[1];
-        string matrix_file = argv[2];
+        string test_file = argv[2];
+        string matrix_file = argv[3];
         test(test_file, matrix_file);
     }
+    string str;
     return 0;
 }
