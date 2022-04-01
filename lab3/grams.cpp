@@ -4,6 +4,8 @@
 #include <regex>
 #include <set>
 #include <numeric>
+#include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -115,8 +117,10 @@ size_t set_word_index(const vector<string>& words, map<string, int>& word_index)
 void set_coocur_matrix(const vector<string>& words, const map<string, int>& word_index, vector<vector<int>>& coocur_matrix, int n) {
     int size = words.size();
     coocur_matrix = vector<vector<int>>(word_index.size(), vector<int>(word_index.size(), 0));
-    for (int left = 0, right = n, center = (n + 1) / 2 - 1; right <= size; left++, right++, center++) {
-        cout << setprecision(5) << (double)center/size << '\r';     // This is to show the progress of building the co-occurrence matrix.
+    for (int left = 0, right = n, center = (n + 1) / 2; right <= size; left++, right++, center++) {
+        if (center % 100 == 0) {
+            cout << setprecision(5) << (double)center/size << '\r';     // This is to show the progress of building the co-occurrence matrix.
+        }
         // If you want, you can do the similar thing to print the progress of other parts.
         // TODO: impelement this function. Store the co-occurrence matrix in the `coocur_matrix` vector.
         /* Your code here */
