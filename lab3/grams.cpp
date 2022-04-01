@@ -38,7 +38,7 @@ size_t record_words(const string& filename, vector<string>& words) {
     string line;
     while (getline(file, line)) {
         transform(line.begin(), line.end(), line.begin(), ::tolower);
-        spilt_string(line, words);
+        split_string(line, words);
     }
     file.close();
     return words.size();
