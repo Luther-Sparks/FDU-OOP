@@ -53,6 +53,7 @@ size_t record_words(const string& filename, vector<string>& words) {
  * @return size_t   the size of the `freq` vector
  */
 size_t record_freq(const vector<string>& words, vector<pair<string, int>>& freq) {
+    // hint: you may find the `map` data structure useful
     // TODO: impelement this function.
     /* Your code here */
     map<string, int> word_freq;
@@ -85,10 +86,10 @@ void filter_words(vector<pair<string, int>>& freq, vector<string>& words) {
         return (a.second > b.second) || (a.second == b.second && a.first < b.first);
     });
     set<string> word_set;
-    for (auto i = 0; i < freq.size() && i < 300; i++) {
+    for (size_t i = 0; i < freq.size() && i < 3000; i++) {
         word_set.insert(freq[i].first);
     }
-    for (auto i = 0; i < words.size(); i++) {
+    for (size_t i = 0; i < words.size(); i++) {
         if (word_set.find(words[i]) == word_set.end()) {
             words[i] = "<unk>";
         }
@@ -112,7 +113,7 @@ size_t set_word_index(const vector<string>& words, map<string, int>& word_index)
     /* Your code here */
     auto tmpset = set<string>(words.begin(), words.end());
     auto dup_words = vector<string>(tmpset.begin(), tmpset.end());
-    for (int i = 0; i < dup_words.size(); i++) {
+    for (size_t i = 0; i < dup_words.size(); i++) {
         word_index[dup_words[i]] = i;
     }
     return word_index.size();
@@ -159,12 +160,22 @@ void set_coocur_matrix(const vector<string>& words, const map<string, int>& word
 }
 
 /**
- * @brief normalize the co-occurrence matrix by row.
+ * @brief normalize the co-occurrence matrix by column.
  * e.g.:
  * co-occurrence matrix:
- *  [[1,0,3,1], [0,1,1,0], [2,1,0,0], [0,0,0,1]]
+ * [0, 2, 1, 0, 0, 0]
+ * [2, 0, 0, 0, 1, 0]
+ * [1, 0, 0, 1, 0, 0]
+ * [0, 0, 1, 0, 0, 1]
+ * [0, 1, 0, 0, 0, 1]
+ * [0, 0, 0, 1, 1, 0]
  * normalized matrix:
- *  [[0.2, 0, 0.6, 0.2], [0, 0.5, 0.5, 0], [2/3, 1/3, 0, 0], [0, 0, 0, 1]]
+ * [0, 2/3, 0.5, 0, 0, 0]
+ * [2/3, 0, 0, 0, 0.5, 0]
+ * [1/3, 0, 0, 0.5, 0, 0]
+ * [0, 0, 0.5, 0, 0, 0.5]
+ * [0, 1/3, 0, 0, 0, 0.5]
+ * [0, 0, 0, 0.5, 0.5, 0]
  * 
  * @param coocur_matrix         co-occurrence martix
  * @param normalized_matrix     normalized co-occurrence martix
@@ -174,13 +185,13 @@ void normalize_matrix(const vector<vector<int>>& coocur_matrix, vector<vector<do
     /* Your code here */
     vector<double> col_sum = vector<double>(coocur_matrix[0].size(), 0.0);
     normalized_matrix = vector<vector<double>>(coocur_matrix.size(), vector<double>(coocur_matrix[0].size(), 0.0));
-    for (int i = 0; i < coocur_matrix.size(); i++) {
-        for (int j = 0; j < coocur_matrix[0].size(); j++) {
+    for (size_t i = 0; i < coocur_matrix.size(); i++) {
+        for (size_t j = 0; j < coocur_matrix[0].size(); j++) {
             col_sum[j] += coocur_matrix[i][j];
         }
     }
-    for (int i = 0; i < coocur_matrix.size(); i++) {
-        for (int j = 0; j < coocur_matrix[0].size(); j++) {
+    for (size_t i = 0; i < coocur_matrix.size(); i++) {
+        for (size_t j = 0; j < coocur_matrix[0].size(); j++) {
             normalized_matrix[i][j] = (double)coocur_matrix[i][j] / col_sum[j];
         }
     }
@@ -212,8 +223,8 @@ void save_matrix(const string& filename, const vector<vector<double>>& matrix, c
         file << it->first << " ";
     }
     file << endl;
-    for (int i = 0; i < matrix.size(); i++) {
-        for (int j = 0; j < matrix[0].size(); j++) {
+    for (size_t i = 0; i < matrix.size(); i++) {
+        for (size_t j = 0; j < matrix[0].size(); j++) {
             file << matrix[i][j] << " ";
         }
         file << endl;
@@ -268,15 +279,34 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
 }
 
 /**
+ * @brief calculate the cosine similarity of word i and word j
+ * you can calculate the cosine similarity by using the formula:
+ * cosine_similarity = sum(matrix[i][k]*matrix[j][k]) / (sqrt(sum(matrix[i][k]^2)) * sqrt(sum(matrix[j][k]^2)))
+ * if you can not understand the formula, please refer to the lab notes.
+ * 
+ * @param matrix    normalized co-occurrence martix
+ * @param i         index of word i
+ * @param j         index of word j
+ * @return double   cosine similarity of word i and word j
+ */
+double similarity(const vector<vector<double>>& matrix, size_t i, size_t j) {
+    // TODO: implement this function
+    /* Your code here */
+    double sum = 0.0;
+    double i_norm = 0.0, j_norm = 0.0;
+    for (size_t k = 0; k < matrix[0].size(); k++) {
+        sum += matrix[i][k] * matrix[j][k];
+        i_norm += matrix[i][k] * matrix[i][k];
+        j_norm += matrix[j][k] * matrix[j][k];
+    }
+    double res = sum / (sqrt(i_norm) * sqrt(j_norm));
+    return res == 0 ? 0 : res;
+}
+
+/**
  * @brief find the 5 most similar words to the given word. If there are less than 5 words, then simply return all of them.
  * You should sort them by the similarity score in descending order.
  * If they have the same similarity score, then sort them by the alphabetical order.
- * The similarity of two words can be evaluated by Euclidean Metric.
- * e.g.:
- * apple:   0.1 0.2 0.5 0.2
- * orange:  0.2 0.1 0.3 0.4
- * then the similarity of them can be calculated by:
- * sqrt((0.1-0.2)^2 + (0.2-0.1)^2 + (0.5-0.3)^2 + (0.2-0.4)^2)
  * 
  * @param word                  given word
  * @param matrix                normalized co-occurrence martix
@@ -295,27 +325,16 @@ vector<string> most_similar(const string& word, const vector<vector<double>>& ma
         return vector<string>();
     }
     int index = iter->first;
-    double index_norm = 0.0;
-    for (int i = 0; i < matrix[0].size(); i++) {
-        index_norm += matrix[index][i] * matrix[index][i];
+    for (size_t i = 0; i < matrix.size(); i++) {
+        if ((int)i == index) continue;
+        double res = similarity(matrix, index, i);
+        similarities.emplace_back(make_pair(i, res));
     }
-    index_norm = sqrt(index_norm);
-    for (int i = 0; i < matrix.size(); i++) {
-        double sum = 0.0;
-        double norm = 0.0;
-        for (int j = 0; j < matrix[0].size(); j++) {
-            sum += matrix[i][j] * matrix[index][j];
-            norm += matrix[i][j] * matrix[i][j];
-        }
-        norm = sqrt(norm);
-        double res = (index_norm * norm == 0) ? 0 : sum / (index_norm * norm);
-        similarities.emplace_back(make_pair(i, sqrt(res)));
-    }
-    sort(similarities.begin(), similarities.end(), [&](pair<int, double> x, pair<int, double> y) {
+    sort(similarities.begin(), similarities.end(), [](pair<int, double>& x, pair<int, double>& y) {
         return (x.second > y.second) || (x.second == y.second && x.first < y.first);
     });
     vector<string> res;
-    for (int i = 0; i < similarities.size() && i < 5; i++) {
+    for (size_t i = 0; i < similarities.size() && i < 5; i++) {
         res.emplace_back(index_word.at(similarities[i].first));
     }
     return res;
