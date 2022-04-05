@@ -146,7 +146,9 @@ void set_coocur_matrix(const vector<string>& words, const map<string, int>& word
     int size = words.size();
     coocur_matrix = vector<vector<int>>(word_index.size(), vector<int>(word_index.size(), 0));
     for (int left = 0, right = n, center = (n + 1) / 2; right <= size; left++, right++, center++) {
-        cout << (double)center/size << '\r';
+        if (center % 100 == 0) {
+            cout << (double)center/size << '\r';
+        }
         for(int i = left; i < right; i++) {
             if (i == center) {
                 continue;
