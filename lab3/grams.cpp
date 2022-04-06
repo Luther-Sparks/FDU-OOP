@@ -251,32 +251,28 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
     // hint: you can refer to the `set_word_index` function and `split_string` function.
     // TODO: restore the normalized_matrix from file `result.txt`.
     /* Your code here */
-    ifstream file(filename);
-    if (!file.good()) {
+    ifstream in(filename);
+    if(!in.good()){
         cerr << "Error: cannot open file " << filename << endl;
         exit(1);
     }
     string line;
-    regex _regex("\\s");
-    getline(file, line);
-    sregex_token_iterator regex_iter(line.begin(), line.end(), _regex, -1);
-    sregex_token_iterator end;
-    int index = 0;
-    while (regex_iter != end) {
-        index_word[index++] = *regex_iter;
-        ++regex_iter;
+    getline(in, line);
+    vector<string> temp_words;
+    spilt_string(line, temp_words);
+    for(size_t i = 0; i < temp_words.size(); i++){
+        index_word[i] = temp_words[i];
     }
-    while (getline(file, line)) {
+    while(getline(in, line)){
+        temp_words.clear();
+        spilt_string(line, temp_words);
         vector<double> row;
-        sregex_token_iterator regex_iter(line.begin(), line.end(), _regex, -1);
-        sregex_token_iterator end;
-        while (regex_iter != end) {
-            row.emplace_back(stod(*regex_iter));
-            ++regex_iter;
+        for(size_t i = 0; i < temp_words.size(); i++){
+            row.emplace_back(stod(temp_words[i]));
         }
         matrix.emplace_back(row);
     }
-    file.close();
+    in.close();
     return;
 }
 

@@ -17,12 +17,10 @@ void spilt_string(const string& s, vector<string>& ret) {
     //       stringstream may be useful, too
     // TODO: implement this function
     /* Your code here */
-    regex word_regex("\\s");
-    sregex_token_iterator regex_iter(s.begin(), s.end(), word_regex, -1);
-    sregex_token_iterator end;
-    while (regex_iter != end) {
-        ret.emplace_back(*regex_iter);
-        ++regex_iter;
+    stringstream ss(s);
+    string part;
+    while (ss >> part) {
+        ret.emplace_back(part);
     }
     return;
 }
