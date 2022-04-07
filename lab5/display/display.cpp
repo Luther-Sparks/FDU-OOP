@@ -38,7 +38,12 @@ void Display::put_string(int x, int y, std::string str) {
     mvwprintw(win, y, x, str.c_str());  // Print string
 }
 
-int Display::get_char() { return wgetch(win); }
+int Display::get_char(int timeout) {
+    wtimeout(win, timeout);
+    int result = wgetch(win);
+    wtimeout(win, -1);
+    return result;
+}
 
 void Display::sleep(int millisecond) {
     std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));

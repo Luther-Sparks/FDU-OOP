@@ -1,7 +1,7 @@
 #include "../display/display.h"
 
 void main_loop(Display &display) {
-    int lines = display.get_lines();
+    int lines = display.get_rows();
     int cols = display.get_cols();
     int line = lines / 2;
     int col = cols / 2;
@@ -26,8 +26,7 @@ void main_loop(Display &display) {
         }
         display.put_string(col, line, "#");
         display.refresh();
-        // Sleep 25ms
-        ;
+        display.sleep(25);
     }
 }
 
