@@ -14,6 +14,7 @@ class Display {
     void refresh();
     void clear();
     int get_char();
+    void sleep(int millisecond);
 
    private:
     int lines, cols;
