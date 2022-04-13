@@ -1,6 +1,6 @@
 help:
 	@echo "Usage: make [target]"
-	@echo "Available targets: welcome"
+	@echo "Available targets: welcome clean"
 
 welcome: ./welcome_dir
 	@cd welcome_dir && make
