@@ -13,7 +13,7 @@ main: main.cpp
 display: ../lib
 	@cd ../lib && make -s
 	
-#clean
+
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)

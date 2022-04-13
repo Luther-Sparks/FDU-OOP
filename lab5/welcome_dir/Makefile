@@ -1,4 +1,5 @@
 CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
+
 main:
 ifeq ($(OS),Windows_NT)
 	@g++ -o main.exe main.cpp ../lib/pdcurses.a $(CXXFLAGS) 
@@ -7,7 +8,7 @@ else
 	@g++ -o main main.cpp -lncurses $(CXXFLAGS)
 	@./main
 endif
-#clean
+
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)

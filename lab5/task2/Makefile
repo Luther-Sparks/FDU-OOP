@@ -1,5 +1,4 @@
 export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
-export LDFLAGS=-lncurses
 
 all: main.o display.o bird.o
 ifeq ($(OS),Windows_NT)
@@ -20,9 +19,6 @@ bird.o: bird.cpp bird.h
 	@echo "Compiling bird.cpp"
 	@g++ -c -o bird.o bird.cpp $(CXXFLAGS)
 
-
-#clean
-@PHONY: clean
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)

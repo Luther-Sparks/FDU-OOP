@@ -16,16 +16,16 @@ Display::Display() {
     wrefresh(win);                    // Refresh window
 }
 
-Display::Display(int lines, int cols) : lines(lines), cols(cols) {
-    initscr();                        // Initialize ncurses
-    noecho();                         // Don't echo input
-    cbreak();                         // Don't wait for ENTER
-    keypad(stdscr, TRUE);             // Enable arrow keys
-    curs_set(0);                      // Hide cursor
+Display::Display(int rows, int cols) : lines(rows), cols(cols) {
+    initscr();             // Initialize ncurses
+    noecho();              // Don't echo input
+    cbreak();              // Don't wait for ENTER
+    keypad(stdscr, TRUE);  // Enable arrow keys
+    curs_set(0);           // Hide cursor
     ch = -1;
-    //Get time in second
+    // Get time in second
     time_start = std::chrono::system_clock::now();
-    win = newwin(lines, cols, 0, 0);  // Create window
+    win = newwin(rows, cols, 0, 0);  // Create window
     wrefresh(win);                    // Refresh window
 }
 
@@ -33,6 +33,9 @@ Display::~Display() {
     delwin(win);  // Delete window
     endwin();     // End ncurses
 }
+
+int Display::get_rows() const { return lines; }
+int Display::get_cols() const { return cols; }
 
 void Display::refresh() { wrefresh(win); }
 

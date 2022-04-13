@@ -11,7 +11,7 @@ void show_game_over(Display &display, double second) {
     display.clear();
     display.put_string(display.get_cols() / 2 - 7, display.get_rows() / 2 - 1, "Game Over");
     display.put_string(display.get_cols() / 2 - 14, display.get_rows() / 2,
-                       "Bird survive " + std::to_string(second) + " seconds");
+                       "Bird survives " + std::to_string(second) + " seconds");
     display.put_string(display.get_cols() / 2 - 13, display.get_rows() / 2 + 1, "Press any key to exit");
     display.refresh();
     display.sleep(200);
@@ -46,13 +46,16 @@ int main() {
             bird.set_a(a.first, g);
         }
 
+
+
+        d.put_string(0, 0, "Time: " + std::to_string(d.time() / 1000.0));
+        d.put_string(0, 1, "Keystrock: " + std::to_string(c));
+        d.put_string(0, 2, "Pos: " + std::to_string(pos.first) + "," + std::to_string(pos.second));
+        d.put_string(0, 3, "Speed: " + std::to_string(v.first) + "," + std::to_string(v.second));
+        d.put_string(0, 4, "Acceleration: " + std::to_string(a.first) + "," + std::to_string(a.second));
+
         d.put_string(pos.first, pos.second, "@");
 
-        d.put_string(1, 1, "Time: " + std::to_string(d.time() / 1000.0));
-        d.put_string(1, 2, "Keystrock:" + std::to_string(c));
-        d.put_string(1, 3, "Pos:" + std::to_string(pos.first) + "," + std::to_string(pos.second));
-        d.put_string(1, 4, "Speed:" + std::to_string(v.first) + "," + std::to_string(v.second));
-        d.put_string(1, 5, "Acceleration:" + std::to_string(a.first) + "," + std::to_string(a.second));
         d.refresh();
 
         if (pos.second <= 0 || pos.second >= d.get_rows() - 1 || pos.first <= 0 || pos.first >= d.get_cols() - 1) {
