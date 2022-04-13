@@ -115,11 +115,26 @@ size_t set_word_index(const vector<string>& words, map<string, int>& word_index)
 void set_coocur_matrix(const vector<string>& words, const map<string, int>& word_index, vector<vector<int>>& coocur_matrix, int n) {
     int size = words.size();
     coocur_matrix = vector<vector<int>>(word_index.size(), vector<int>(word_index.size(), 0));
+<<<<<<< HEAD
     for (int left = 0, right = n, center = (n + 1) / 2 - 1; right <= size; left++, right++, center++) {
         cout << setprecision(5) << (double)center/size << '\r';     // This is to show the progress of building the co-occurrence matrix.
         // If you want, you can do the similar thing to print the progress of other parts.
         // TODO: impelement this function. Store the co-occurrence matrix in the `coocur_matrix` vector.
         /* Your code here */
+=======
+    for (int left = 0, right = n, center = (n + 1) / 2; right <= size; left++, right++, center++) {
+        if (center % 100 == 0) {
+            cout << (double)center/size << '\r';
+        }
+        for(int i = left; i < right; i++) {
+            if (i == center) {
+                continue;
+            }
+            int i_index = word_index.at(words[i]);
+            int center_index = word_index.at(words[center]);
+            coocur_matrix[center_index][i_index]++;
+        }
+>>>>>>> master
     }
     return;
 }
@@ -186,6 +201,31 @@ void restore_matrix(const string& filename, vector<vector<double>>& matrix, map<
     // hint: you can refer to the `set_word_index` function and `split_string` function.
     // TODO: restore the normalized_matrix from file `result.txt`.
     /* Your code here */
+<<<<<<< HEAD
+=======
+    ifstream in(filename);
+    if(!in.good()){
+        cerr << "Error: cannot open file " << filename << endl;
+        exit(1);
+    }
+    string line;
+    getline(in, line);
+    vector<string> temp_words;
+    spilt_string(line, temp_words);
+    for(size_t i = 0; i < temp_words.size(); i++){
+        index_word[i] = temp_words[i];
+    }
+    while(getline(in, line)){
+        temp_words.clear();
+        spilt_string(line, temp_words);
+        vector<double> row;
+        for(size_t i = 0; i < temp_words.size(); i++){
+            row.emplace_back(stod(temp_words[i]));
+        }
+        matrix.emplace_back(row);
+    }
+    in.close();
+>>>>>>> master
     return;
 }
 

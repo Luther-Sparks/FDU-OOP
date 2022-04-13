@@ -11,7 +11,7 @@ import argparse
 
 
 # exit if python2
-if sys.version_info[0] < 3 and sys.version_info[1] < 7:
+if sys.version_info[0] < 3 or sys.version_info[1] < 7:
     print("This program requires Python 3.7. Please contact TA for help.")
     sys.exit(1)
 

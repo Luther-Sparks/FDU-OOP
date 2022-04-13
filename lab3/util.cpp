@@ -17,5 +17,13 @@ void spilt_string(const string& s, vector<string>& ret) {
     //       stringstream may be useful, too
     // TODO: implement this function
     /* Your code here */
+<<<<<<< HEAD
+=======
+    stringstream ss(s);
+    string part;
+    while (ss >> part) {
+        ret.emplace_back(part);
+    }
+>>>>>>> master
     return;
 }
