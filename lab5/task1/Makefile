@@ -1,20 +1,22 @@
 export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
-export LDFLAGS=-lncurses
 
 all: main display
-	@echo "Linking..."
-	@g++ -o main.exe main.o ../display/display.o $(CXXFLAGS) $(LDFLAGS)
+ifeq ($(OS),Windows_NT)
+	@g++ -o main.exe main.o ../lib/display.o ../lib/pdcurses.a $(CXXFLAGS)
+endif
 
-main.o: main.cpp 
-	@echo "Compiling main.cpp"
+main: main.cpp 
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
 
-display.o: ../display
-	@echo "Compiling display..."
-	@cd ../display && make
+display: ../lib
+	@cd ../lib && make
 	
 #clean
 @PHONY: clean
 clean:
-	rm -f main.exe main.o
-	@cd ../display && make clean
+ifeq ($(OS),Windows_NT)
+	@del main.exe main.o
+else
+	@rm -f main.exe main.o
+endif
+	@cd ../lib && make clean
