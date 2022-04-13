@@ -5,14 +5,15 @@
 #endif
 #include <chrono>
 #include <string>
+
 class Display {
    public:
     Display();
-    Display(int lines, int cols);
+    Display(int rows, int cols);
     ~Display();
 
-    int get_rows() const { return lines; }
-    int get_cols() const { return cols; }
+    int get_rows() const;
+    int get_cols() const;
 
     void put_string(int x, int y, std::string str);
     void refresh();
