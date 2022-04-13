@@ -1,4 +1,4 @@
-#include "../display/display.h"
+#include "../lib/display.h"
 
 void main_loop(Display &display) {
     int lines = display.get_rows();

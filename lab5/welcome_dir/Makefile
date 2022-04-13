@@ -1,9 +1,16 @@
 CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 main:
-	@g++ -o main.exe main.cpp $(CXXFLAGS) 
+ifeq ($(OS),Windows_NT)
+	@g++ -o main.exe main.cpp ../lib/pdcurses.a $(CXXFLAGS) 
 	@./main.exe
+endif
 #clean
 @PHONY: clean
 clean:
-	rm -f main.exe
+ifeq ($(OS),Windows_NT)
+	@-del /f main.exe main.o 2> nul
+else
+	@-rm -f main.exe main.o
+endif
+	@cd ../lib && make clean
 

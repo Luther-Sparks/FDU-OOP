@@ -3,7 +3,7 @@ display:
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
-	@del display.a display.o
+	@-del /f display.o 2> nul
 else
-	@rm -f display.o
+	@-rm -f display.o
 endif

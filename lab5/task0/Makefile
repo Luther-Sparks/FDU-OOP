@@ -9,14 +9,14 @@ main: main.cpp
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
 
 display: ../lib
-	@cd ../lib && make
+	@cd ../lib && make -s
 	
 #clean
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
-	@del main.exe main.o
+	@-del /f main.exe main.o 2> nul
 else
-	@rm -f main.exe main.o
+	@-rm -f main.exe main.o
 endif
-	@cd ../lib && make clean
+	@cd ../lib && make -s clean

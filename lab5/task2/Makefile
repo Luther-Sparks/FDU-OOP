@@ -11,7 +11,7 @@ main.o: main.cpp
 
 display.o: ../display
 	@echo "Compiling display..."
-	@cd ../display && make
+	@cd ../display && make -s
 
 bird.o: bird.cpp bird.h
 	@echo "Compiling bird.cpp"
@@ -20,6 +20,11 @@ bird.o: bird.cpp bird.h
 
 #clean
 @PHONY: clean
+@PHONY: clean
 clean:
-	rm -f main.exe main.o bird.o
-	@cd ../display && make clean
+ifeq ($(OS),Windows_NT)
+	@-del /f main.exe main.o bird.o 2> nul
+else
+	@-rm -f main.exe main.o bird.o
+endif
+	@cd ../lib && make -s clean

@@ -1,5 +1,5 @@
 #ifdef _WIN32
-#include "curses.h"
+#include "../lib/curses.h"
 #else
 #include <ncurses.h>
 #endif
