@@ -1,6 +1,5 @@
 #include "display.h"
 
-#include <chrono>
 #include <thread>
 
 Display::Display() {
@@ -11,6 +10,8 @@ Display::Display() {
     curs_set(0);           // Hide cursor
     lines = LINES;
     cols = COLS;
+    ch = -1;
+    time_start = std::chrono::system_clock::now();
     win = newwin(LINES, COLS, 0, 0);  // Create window
     wrefresh(win);                    // Refresh window
 }
@@ -21,6 +22,9 @@ Display::Display(int lines, int cols) : lines(lines), cols(cols) {
     cbreak();                         // Don't wait for ENTER
     keypad(stdscr, TRUE);             // Enable arrow keys
     curs_set(0);                      // Hide cursor
+    ch = -1;
+    //Get time in second
+    time_start = std::chrono::system_clock::now();
     win = newwin(lines, cols, 0, 0);  // Create window
     wrefresh(win);                    // Refresh window
 }
@@ -42,9 +46,15 @@ int Display::get_char(int timeout) {
     wtimeout(win, timeout);
     int result = wgetch(win);
     wtimeout(win, -1);
+    if (result < 0) {
+        return -ch;
+    }
+    ch = result;
     return result;
 }
 
-void Display::sleep(int millisecond) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));
+void Display::sleep(int millisecond) { std::this_thread::sleep_for(std::chrono::milliseconds(millisecond)); }
+
+int Display::time() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - time_start).count();
 }

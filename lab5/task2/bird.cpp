@@ -1,12 +1,29 @@
 #include "bird.h"
 
-Bird::Bird(double y, double speed, double acce)
-    : y(y), speed(speed), acce(acce) {}
+Bird::Bird(double x, double y, double vx, double vy, double ax, double ay)
+    : x(x), y(y), vx(vx), vy(vy), ax(ax), ay(ay) {}
 
 void Bird::tick() {
-    y += speed;
-    speed += acce;
+    x = x + vx;
+    y = y + vy;
+    vx += ax;
+    vy += ay;
 }
 
-int Bird::get_y() const { return (int)y; }
-void Bird::set_v(double new_speed) { speed = new_speed; }
+std::pair<int, int> Bird::get_pos() const { return std::make_pair((int)x, (int)y); }
+std::pair<double, double> Bird::get_v() const { return std::make_pair(vx, vy); }
+std::pair<double, double> Bird::get_a() const { return std::make_pair(ax, ay); }
+void Bird::set_pos(int _x, int _y) {
+    x = _x;
+    y = _y;
+}
+
+void Bird::set_v(double _vx, double _vy) {
+    vx = _vx;
+    vy = _vy;
+}
+
+void Bird::set_a(double _ax, double _ay) {
+    ax = _ax;
+    ay = _ay;
+}

@@ -2,16 +2,17 @@ export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 export LDFLAGS=-lncurses
 
 all: main.o display.o bird.o
-	@echo "Linking..."
-	@g++ -o main.exe main.o bird.o ../display/display.o $(CXXFLAGS) $(LDFLAGS)
+ifeq ($(OS),Windows_NT)
+	@g++ -o main.exe main.o bird.o ../lib/display.o ../lib/pdcurses.a $(CXXFLAGS)
+endif
 
 main.o: main.cpp 
 	@echo "Compiling main.cpp"
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
 
-display.o: ../display
+display.o:
 	@echo "Compiling display..."
-	@cd ../display && make -s
+	@cd ../lib && make -s
 
 bird.o: bird.cpp bird.h
 	@echo "Compiling bird.cpp"

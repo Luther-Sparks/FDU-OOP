@@ -3,7 +3,7 @@
 #else
 #include <ncurses.h>
 #endif
-
+#include <chrono>
 #include <string>
 class Display {
    public:
@@ -19,8 +19,11 @@ class Display {
     void clear();
     int get_char(int timeout = -1);
     void sleep(int millisecond);
+    int time();
 
    private:
     int lines, cols;
+    int ch;
     WINDOW* win;
+    std::chrono::time_point<std::chrono::system_clock> time_start;
 };
