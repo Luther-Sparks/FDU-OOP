@@ -13,8 +13,8 @@ void main_loop(Display &display) {
         display.clear();
         display.put_string(cols / 2 - 7, 0, "lonely wanderer");
         display.put_string(cols / 2, lines - 1, std::to_string(ch));
-        // Now, if the bird flys to the border, the bird will fly through the border and appear on the other side of the screen. 
-        // We want the bird to appear on a random position on the screen.
+        // Now, if the wanderer walk to the border, the wanderer will walk through the border and appear on the other side of the screen. 
+        // We want the wanderer to appear on a random position on the screen.
         // TODO: Please modify the code below to implement this feature.
         /* Your code here */
         if (ch == 'q') {
