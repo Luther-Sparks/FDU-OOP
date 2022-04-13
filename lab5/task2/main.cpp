@@ -22,7 +22,7 @@ int main() {
     Bird bird(d.get_cols() / 2, d.get_rows() / 2, 0, 0, 0, 0);
     int c;
     while (true) {
-        c = d.get_char(25);
+        c = d.get_char(50);
         d.clear();
         auto pos = bird.get_pos();
         auto v = bird.get_v();
