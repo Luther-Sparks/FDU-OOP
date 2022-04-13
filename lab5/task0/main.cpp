@@ -1,4 +1,4 @@
-#include "../display/display.h"
+#include "../lib/display.h"
 
 int main(){
     auto display = Display();
