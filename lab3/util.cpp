@@ -11,7 +11,7 @@ using namespace std;
  * @param ret result vector. In this lab, argument `ret` is a global variable 
  *            and is used to store the words according to the appearance order.
  */
-void spilt_string(const string& s, vector<string>& ret) {
+void split_string(const string& s, vector<string>& ret) {
     // hint: you can use function `substr` to get a substring of the string `s`
     //       if you know what regular expression is, you can use `regex` to easily split the string `s`
     //       stringstream may be useful, too

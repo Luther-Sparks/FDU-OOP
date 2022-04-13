@@ -17,6 +17,7 @@ void train(const int& n, const string& filename) {
     // padding the words vector with word `<unk>`
     for (auto i = 0; i < n - 1; i++) {
         words.insert(words.begin(), "<unk>");
+        words.insert(words.end(), "<unk>");
     }
     record_freq(words, freq);                               // record the frequency of each word
     cout << "done with record_freq" << endl;
