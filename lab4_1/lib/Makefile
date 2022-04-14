@@ -1,3 +1,4 @@
+export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 display:
 	@g++ -c -o display.o display.cpp $(CXXFLAGS)
 @PHONY: clean
