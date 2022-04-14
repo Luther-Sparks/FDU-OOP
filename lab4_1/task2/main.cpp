@@ -39,14 +39,13 @@ int main() {
             bird.set_v(v_tap_right, v.second);
             bird.set_a(a_tap_right, g);
         } else {
-            if (v.first * a.first >= 0) {
+            if ((v.first + a.first) * a.first >= 0) {
                 bird.set_a(0, g);
                 bird.set_v(0, v.second);
+            } else {
+                bird.set_a(a.first, g);
             }
-            bird.set_a(a.first, g);
         }
-
-
 
         d.put_string(0, 0, "Time: " + std::to_string(d.time() / 1000.0));
         d.put_string(0, 1, "Keystrock: " + std::to_string(c));

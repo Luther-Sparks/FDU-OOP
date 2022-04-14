@@ -4,8 +4,8 @@ Bird::Bird(double x, double y, double vx, double vy, double ax, double ay)
     : x(x), y(y), vx(vx), vy(vy), ax(ax), ay(ay) {}
 
 void Bird::tick() {
-    x = x + vx;
-    y = y + vy;
+    x += vx + ax/2;
+    y += vy + ay/2;
     vx += ax;
     vy += ay;
 }
