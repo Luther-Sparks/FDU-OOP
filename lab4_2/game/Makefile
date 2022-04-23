@@ -1,8 +1,11 @@
-export CXXFLAGS=-std=c++17	-Wall -Wextra -Werror -O2
+export CXXFLAGS=-std=c++17 -Wall -Wextra -Werror -O2
+
 rectangle: display
 	@g++ -c -o rectangle.o rectangle.cpp $(CXXFLAGS)
+
 display: ../lib
 	@cd ../lib && make -s
+	
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
