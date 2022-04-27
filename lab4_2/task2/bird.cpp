@@ -42,7 +42,7 @@ bool Bird::is_inside(int x, int y) const {
 }
 
 void Bird::tick(int dx, int dy) {
-    x += vx + ax/2 + dx;
+    this->x += vx + ax/2 + dx;
     y += vy + ay/2 + dy;
     vx += ax;
     vy += ay;

@@ -10,7 +10,7 @@ public:
     ~Bird() = default;
 
     void draw(Display& display) const override;
-    void tick(int dx, int dy);
+    void tick(int dx, int dy) override;
     bool is_inside(int x, int y) const override;
     Type type() const override { return Type::Bird; }
     bool in_screen(Object& border) override;
