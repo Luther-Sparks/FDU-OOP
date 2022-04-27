@@ -3,11 +3,20 @@
 
 #include <iostream>
 #include <string>
+#ifdef _WIN32
+#include "mingw.thread.h"
+using mingw_stdthread::thread;
+#else
 #include <thread>
+using std::thread;
+using std::atomic_bool;
+#endif
 #include <atomic>
 #include <pthread.h>
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::endl;
 
 class Audio {
 /**
@@ -40,7 +49,11 @@ public:
 private:
     string _file_name;
     thread* _t;
+#ifndef _WIN32
     atomic_bool _loop;
+#else
+    bool _loop;
+#endif // !_WIN32
     int _volume;
     pid_t _loop_pid = 0;
 };

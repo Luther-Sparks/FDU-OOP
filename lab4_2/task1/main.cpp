@@ -1,4 +1,8 @@
 #include "../lib/display.h"
+#ifndef __SRC_FILE
+#define __SRC_FILE
+#endif // !__SRC_FILE
+#include "../lib/audio.h"
 #include "bird.h"
 const double g = 0.1;
 const double v_tap_up = -1;
@@ -19,6 +23,10 @@ void show_game_over(Display &display, double second) {
 }
 int main() {
     Display d("log.txt");
+    string audio_dir = "../audio/";
+    string bgm_file = audio_dir + "bgm.mp3";
+    Audio bgm(bgm_file);
+    bgm.play_loop();
     Bird bird(d.get_cols() / 2, d.get_rows() / 2, 0, 0, 0, 0);
     int c;
     while (true) {
@@ -28,6 +36,7 @@ int main() {
         auto v = bird.get_v();
         auto a = bird.get_a();
         if (c == 'q') {
+            delete &bgm;
             break;
         } else if (c == ' ') {
             bird.set_v(v.first, v_tap_up);
@@ -58,6 +67,9 @@ int main() {
         d.refresh();
         d.log();
         if (pos.second <= 0 || pos.second >= d.get_rows() - 1 || pos.first <= 0 || pos.first >= d.get_cols() - 1) {
+            bgm.stop();
+            Audio game_over(audio_dir + "applause.mp3");
+            game_over.play_once();
             show_game_over(d, d.time() / 1000.0);
             break;
         }

@@ -3,7 +3,11 @@ all: display audio
 display:
 	@g++ -c -o display.o display.cpp $(CXXFLAGS)
 audio:
+ifeq ($(OS),Windows_NT)
+	@g++ -c -o audio.o audio.cpp $(CXXFLAGS) -lwinmm
+else
 	@g++ -c -o audio.o audio.cpp $(CXXFLAGS)
+endif
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)

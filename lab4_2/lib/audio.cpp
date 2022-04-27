@@ -1,31 +1,79 @@
-#include "audio.h"
+
 #ifdef _WIN32
-// FIXME
+#include <windows.h>
+#include <mmsystem.h>
+
+#ifndef __SRC_FILE
+#define __SRC_FILE
+#endif // !__SRC_FILE
+#include "audio.h"
+
+using std::cin;
+
+Audio::~Audio() {
+    this->stop();
+    if (_t != nullptr) {
+        _t->join();
+        delete _t;
+        _t = nullptr;
+    }
+}
+
+void Audio::play_once() {
+    _t = new thread([this]() {
+        auto tmp = "play " + _file_name;
+        auto command = tmp.c_str();
+        if (mciSendString(command, NULL, 0, NULL) != 0) {
+            cout << "Error playing sound file: " << command << endl;
+        }
+        tmp = "setaudio " + _file_name + " volume to " + std::to_string(_volume*10);
+        command = tmp.c_str();
+        if (mciSendString(command, NULL, 0, NULL) != 0) {
+            cout << "Error setting volume: " << command << endl;
+        }
+    });
+}
+
+void Audio::play_loop() {
+    _loop = true;
+    _t = new thread([this]() {
+        auto tmp = "play " + _file_name + " repeat";
+        auto command = tmp.c_str();
+        if (mciSendString(command, NULL, 0, NULL) != 0) {
+            cout << "Error playing sound file: " << command << endl;
+        }
+        tmp = "setaudio " + _file_name + " volume to " + std::to_string(_volume*10);
+        command = tmp.c_str();
+        if (mciSendString(command, NULL, 0, NULL) != 0) {
+            cout << "Error setting volume: " << command << endl;
+        }
+    });
+}
+
+void Audio::stop() {
+    _loop = false;
+    auto tmp = "stop " + _file_name;
+    auto command = tmp.c_str();
+    if (mciSendString(command, NULL, 0, NULL) != 0) {
+        cout << "Error playing sound file: " << command << endl;
+    }
+    _t->join();
+    delete _t;
+    _t = nullptr;
+}
+
 #else
+#include "audio.h"
 #include <signal.h>
 #include <unistd.h>
-
-struct member {
-    int volume;
-    const char* file_name;
-};
 
 Audio::~Audio() {
     if (_t != nullptr) {
         _t->join();
         delete _t;
+        _t = nullptr;
     }
 }
-
-void* temp(void* args) {
-    member* m = (member*)args;
-    if (m != NULL) {
-        string cmd = "afplay -v " + to_string(m->volume) + " " + m->file_name;
-        system(cmd.c_str());
-    }
-    return nullptr;
-}
-
 
 void Audio::play_once() {
     _t = new thread([&, this](){
@@ -37,9 +85,6 @@ void Audio::play_once() {
             waitpid(this->_loop_pid, NULL, 0);
         }
     });
-    _t->join();
-    delete _t;
-    _t = nullptr;
 }
 
 void Audio::play_loop() {

@@ -1,19 +1,20 @@
 export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 
-all: main.o display.o bird.o
+all: main.o lib.o bird.o
 ifeq ($(OS),Windows_NT)
-	@g++ -o main.exe main.o bird.o ../lib/display.o ../lib/pdcurses.a $(CXXFLAGS)
+	@g++ -o main.exe main.o bird.o ../lib/display.o ../lib/audio.o ../lib/pdcurses.a $(CXXFLAGS) -lwinmm
 else
-	@g++ -o main main.o bird.o ../lib/display.o -lncurses $(CXXFLAGS)
+	@g++ -o main main.o bird.o ../lib/display.o ../lib/audio.o -lncurses $(CXXFLAGS)
 endif
 
 main.o: main.cpp 
 	@echo "Compiling main.cpp"
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
 
-display.o:
-	@echo "Compiling display..."
+lib.o:
+	@echo "Compiling lib..."
 	@cd ../lib && make -s
+
 
 bird.o: bird.cpp bird.h
 	@echo "Compiling bird.cpp"
@@ -22,8 +23,8 @@ bird.o: bird.cpp bird.h
 @PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
-	@-del /f main.exe main.o bird.o 2> nul
+	@-del /f main.exe main.o bird.o log.txt 2> nul
 else
-	@-rm -f main main.o bird.o
+	@-rm -f main main.o bird.o log.txt
 endif
 	@cd ../lib && make -s clean
