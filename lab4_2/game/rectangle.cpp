@@ -7,11 +7,34 @@ void Rectangle::draw(Display& display) const {
     display.put_vertical_line(x + width - 1, y, height, '|');
 }
 
-//Add [[maybe_unused]] to suppress warning
-void Rectangle::tick([[maybe_unused]] std::map<std::string, std::string>& global_state) {}
+
+void Rectangle::tick(int dx, int dy) {
+    x += dx;
+    y += dy;
+}
 
 bool Rectangle::is_inside(int x, int y) const {
     if (x >= this->x && x <= this->x + width && y >= this->y && y <= this->y + height) {
+        return true;
+    }
+    return false;
+}
+
+bool Rectangle::in_screen(Object& border) {
+    if (border.is_inside(x, y) && border.is_inside(x + width - 1, y) 
+        && border.is_inside(x, y + height - 1) 
+        && border.is_inside(x + width - 1, y + height - 1)) {
+        return true;
+    }
+    valid = false;
+    return false;
+}
+
+bool Rectangle::if_collide(Object& obj) {
+    if (obj.is_inside(x, y) || obj.is_inside(x + width - 1, y) 
+        || obj.is_inside(x, y + height - 1) 
+        || obj.is_inside(x + width - 1, y + height - 1)) {
+        valid = false;
         return true;
     }
     return false;

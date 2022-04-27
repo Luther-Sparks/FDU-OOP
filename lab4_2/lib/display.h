@@ -1,3 +1,5 @@
+#ifndef DISPLAY_GUARD
+#define DISPLAY_GUARD
 #ifdef _WIN32
 #include "curses.h"
 #else
@@ -7,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+
 
 class Display {
     /**
@@ -84,3 +87,5 @@ class Display {
     std::chrono::time_point<std::chrono::system_clock> time_start;
     void assert(bool condition, std::string message);
 };
+
+#endif // !DISPLAY_GUARD
