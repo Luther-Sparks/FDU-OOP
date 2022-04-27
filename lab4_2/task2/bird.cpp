@@ -32,7 +32,7 @@ void Bird::set_a(double _ax, double _ay) {
 void Bird::draw(Display& display) const {
     auto intx = (int)std::round(x);
     auto inty = (int)std::round(y);
-    if (intx > 0 && inty > 0) {
+    if (intx > 0 && inty > 0 && intx < display.get_cols() && inty < display.get_rows()) {
         display.put_string(intx, inty, "@");
     }
 }

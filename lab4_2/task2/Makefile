@@ -1,4 +1,4 @@
-export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -g
+export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 
 all: main.o lib.o game.o bird.o
 ifeq ($(OS),Windows_NT)
