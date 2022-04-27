@@ -79,6 +79,7 @@ void Display::clear() {
 
 void Display::put_string(int x, int y, std::string str) {
     mvwprintw(win, y, x, str.c_str());  // Print string
+    assert(x + str.length() <= cols, "x + str.length() <= cols");
     for (int i = 0; i < (int)str.size(); i++) {
         buffer[y][x + i] = str[i];
     }
@@ -86,6 +87,7 @@ void Display::put_string(int x, int y, std::string str) {
 
 void Display::put_vertical_line(int x, int y, int l, int ch) {
     mvwvline(win, y, x, ch, l);
+    assert(y + l <= lines, "y + l <= lines");
     for (int i = 0; i < l; i++) {
         buffer[y + i][x] = ch;
     }
@@ -93,7 +95,8 @@ void Display::put_vertical_line(int x, int y, int l, int ch) {
 
 void Display::put_horizontal_line(int x, int y, int l, int ch) {
     mvwhline(win, y, x, ch, l);
-    for(int i = 0; i < l; i++) {
+    assert(x + l <= cols, "x + l <= cols");
+    for (int i = 0; i < l; i++) {
         buffer[y][x + i] = ch;
     }
 }
@@ -119,15 +122,25 @@ int Display::time() {
         .count();
 }
 
-void Display::log(std::string str) {
+void Display::log(std::string str, bool print_screen) {
     if (plog_file == nullptr) {
         return;
     }
     *plog_file << "[" << time() << "] " << str << std::endl;
+    if (!print_screen) {
+        return;
+    }
     for (const auto& line : screen) {
         for (auto ch : line) {
             *plog_file << ch;
         }
         *plog_file << std::endl;
+    }
+}
+
+void Display::assert(bool condition, std::string message) {
+    if (!condition) {
+        log("Display Assertion Failed: " + message, false);
+        throw std::runtime_error(message);
     }
 }

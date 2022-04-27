@@ -75,7 +75,7 @@ class Display {
     // e.g.
     // [3.23] string
     // screen
-    void log(std::string str = "");
+    void log(std::string str = "", bool print_screen = true);
 
    private:
     int lines, cols;
@@ -85,6 +85,7 @@ class Display {
     std::ofstream* plog_file;
     WINDOW* win;
     std::chrono::time_point<std::chrono::system_clock> time_start;
+    void assert(bool condition, std::string message);
 };
 
 #endif // !DISPLAY_GUARD
