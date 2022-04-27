@@ -5,5 +5,7 @@ help:
 
 .PHONY: clean
 clean:
-	@cd task0 && make -s clean
+	@cd lib && make -s clean
+	@cd game && make -s clean
 	@cd task1 && make -s clean
+	@cd task2 && make -s clean
