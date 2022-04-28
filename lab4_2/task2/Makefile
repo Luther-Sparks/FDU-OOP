@@ -10,7 +10,7 @@ endif
 main.o: main.cpp 
 	@echo "Compiling main.cpp"
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
-	
+
 stop:
 ifneq ($(OS),Windows_NT)
 	@echo "Stop the music"
@@ -45,3 +45,4 @@ else
 	@-rm -f main main.o bird.o log.txt
 endif
 	@cd ../lib && make -s clean
+	@cd ../game && make -s clean

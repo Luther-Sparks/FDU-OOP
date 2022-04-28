@@ -34,3 +34,4 @@ else
 	@-rm -f main main.o bird.o log.txt
 endif
 	@cd ../lib && make -s clean
+	@cd ../game && make -s clean
