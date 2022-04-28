@@ -4,20 +4,19 @@
 #endif  // !__SRC_FILE
 #include <vector>
 
+#include "../game/border.h"
 #include "../game/movingRectangle.h"
 #include "../game/rectangle.h"
-#include "../game/border.h"
 #include "../lib/audio.h"
 #include "bird.h"
 
 using std::vector;
 using ObjPool = vector<Object*>;
 
-
 void detect_collision(ObjPool& pool) {
-    for(Object* obj1 : pool) {
-        for(Object* obj2 : pool) {
-            if(obj1 == obj2) continue;
+    for (Object* obj1 : pool) {
+        for (Object* obj2 : pool) {
+            if (obj1 == obj2) continue;
             obj1->detect_collide(*obj2);
         }
     }
@@ -38,7 +37,7 @@ void show_game_over(Display& display, double second) {
 
 void add_rectangle(ObjPool& pool, Display& d) {
     static int count = 30;
-    if(count-- > 0) return;
+    if (count-- > 0) return;
     count = 30;
     int x = d.get_cols() - 3;
     int y = rand() % d.get_rows();
@@ -61,9 +60,7 @@ int main() {
     obj_pool.emplace_back(bird);
     obj_pool.emplace_back(border);
 
-
     while (true) {
-
         // Process keyboard input
         int lastc = 0;
         int c = d.get_char(50);
@@ -105,7 +102,7 @@ int main() {
             show_game_over(d, d.time() / 1000.0);
             game_over.stop();
             collide.stop();
-            flap.stop();
+            // flap.stop();
             break;
         }
 
