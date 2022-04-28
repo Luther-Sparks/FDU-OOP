@@ -9,10 +9,14 @@ public:
     Bird& operator=(const Bird&) = default;
     ~Bird() = default;
 
+    // draw the bird on the display
     void draw(Display& display) const override;
+    // update the bird's porperties according to key input
     void tick(int key) override;
+    // check if the specified position is inside the bird
     bool is_inside(int x, int y) const override;
     Type type() const override { return Type::Bird; }
+    // detect collision with the specified object
     bool detect_collide(Object& obj) override;
     std::pair<int, int> get_pos() const;
     std::pair<double, double> get_v() const;

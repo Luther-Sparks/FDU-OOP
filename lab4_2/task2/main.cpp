@@ -39,9 +39,9 @@ void add_rectangle(ObjPool& pool, Display& d) {
     static int count = 30;
     if (count-- > 0) return;
     count = 30;
-    int x = d.get_cols() - 3;
     int y = rand() % d.get_rows();
-    int w = rand() % 2 + 1;
+    int w = rand() % 5 + 1;
+    int x = d.get_cols() - w;
     int h = rand() % (2 * (d.get_rows() - y) / 3) + 1;
     pool.push_back(new MovingRectangle(x, y, w, h, -1, 0));
 }
@@ -67,6 +67,9 @@ int main() {
         d.clear();
         if (c == 'q') {
             bgm.stop();
+            flap.stop();
+            collide.stop();
+            game_over.stop();
             break;
         } else if (c == ' ') {
             if (lastc != c) {
