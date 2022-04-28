@@ -82,6 +82,7 @@ void Audio::play_once() {
             execlp("afplay", "afplay", "-v", std::to_string(_volume).c_str(), _file_name.c_str(), NULL);
         }
         else {
+            waitpid(this->_loop_pid, NULL, 0);
         }
     });
 }
@@ -103,7 +104,10 @@ void Audio::play_loop() {
 
 void Audio::stop() {
     _loop = false;
-    kill(this->_loop_pid, SIGKILL);
+    int status = kill(this->_loop_pid, 0);
+    if (status != -1) {
+        kill(this->_loop_pid, SIGKILL);
+    }
     _t->join();
     delete _t;
     _t = nullptr;
