@@ -7,6 +7,12 @@ else
 	@g++ -o main main.o bird.o ../lib/display.o ../lib/audio.o -lncurses $(CXXFLAGS)
 endif
 
+stop:
+ifneq ($(OS),Windows_NT)
+	@echo "Stop the music"
+	@pkill afplay || true
+endif
+
 main.o: main.cpp 
 	@echo "Compiling main.cpp"
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)

@@ -10,6 +10,12 @@ endif
 main.o: main.cpp 
 	@echo "Compiling main.cpp"
 	@g++ -c -o main.o main.cpp $(CXXFLAGS)
+	
+stop:
+ifneq ($(OS),Windows_NT)
+	@echo "Stop the music"
+	@pkill afplay || true
+endif
 
 lib.o:
 	@echo "Compiling lib..."

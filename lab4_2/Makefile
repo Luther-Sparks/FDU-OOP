@@ -2,6 +2,11 @@ help:
 	@echo "Usage: make [target]"
 	@echo "Available targets: welcome clean"
 
+stop:
+ifneq ($(OS),Windows_NT)
+	@echo "Stop the music"
+	@pkill afplay || true
+endif
 
 .PHONY: clean
 clean:
