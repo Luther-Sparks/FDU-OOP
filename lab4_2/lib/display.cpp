@@ -79,10 +79,10 @@ void Display::clear() {
 
 void Display::put_string(int x, int y, std::string str) {
     mvwprintw(win, y, x, str.c_str());  // Print string
-    assert(x + str.length() <= cols, "x + str.length() <= cols");
-    assert(y < lines, "y < lines");
-    assert(x >= 0, "x >= 0");
-    assert(y >= 0, "y >= 0");
+    inner_assert(x + (int)str.length() <= cols, "x + str.length() <= cols");
+    inner_assert(y < lines, "y < lines");
+    inner_assert(x >= 0, "x >= 0");
+    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < (int)str.size(); i++) {
         buffer[y][x + i] = str[i];
     }
@@ -90,10 +90,10 @@ void Display::put_string(int x, int y, std::string str) {
 
 void Display::put_vertical_line(int x, int y, int l, int ch) {
     mvwvline(win, y, x, ch, l);
-    assert(y + l <= lines, "y + l <= lines");
-    assert(x < cols, "x < cols");
-    assert(x >= 0, "x >= 0");
-    assert(y >= 0, "y >= 0");
+    inner_assert(y + l <= lines, "y + l <= lines");
+    inner_assert(x < cols, "x < cols");
+    inner_assert(x >= 0, "x >= 0");
+    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < l; i++) {
         buffer[y + i][x] = ch;
     }
@@ -101,10 +101,10 @@ void Display::put_vertical_line(int x, int y, int l, int ch) {
 
 void Display::put_horizontal_line(int x, int y, int l, int ch) {
     mvwhline(win, y, x, ch, l);
-    assert(x + l <= cols, "x + l <= cols");
-    assert(y < lines, "y < lines");
-    assert(x >= 0, "x >= 0");
-    assert(y >= 0, "y >= 0");
+    inner_assert(x + l <= cols, "x + l <= cols");
+    inner_assert(y < lines, "y < lines");
+    inner_assert(x >= 0, "x >= 0");
+    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < l; i++) {
         buffer[y][x + i] = ch;
     }
@@ -147,7 +147,7 @@ void Display::log(std::string str, bool print_screen) {
     }
 }
 
-void Display::assert(bool condition, std::string message) {
+void Display::inner_assert(bool condition, std::string message) {
     if (!condition) {
         log("Display Assertion Failed: " + message, false);
         throw std::runtime_error(message);

@@ -66,10 +66,10 @@ void Audio::stop() {
 #include "audio.h"
 #include <signal.h>
 #include <unistd.h>
+using std::to_string;
 
 Audio::~Audio() {
     if (_t != nullptr) {
-        _t->join();
         delete _t;
         _t = nullptr;
     }
@@ -82,7 +82,6 @@ void Audio::play_once() {
             execlp("afplay", "afplay", "-v", to_string(_volume).c_str(), _file_name.c_str(), NULL);
         }
         else {
-            waitpid(this->_loop_pid, NULL, 0);
         }
     });
 }

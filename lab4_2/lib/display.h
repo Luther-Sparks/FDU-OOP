@@ -85,7 +85,7 @@ class Display {
     std::ofstream* plog_file;
     WINDOW* win;
     std::chrono::time_point<std::chrono::system_clock> time_start;
-    void assert(bool condition, std::string message);
+    void inner_assert(bool condition, std::string message);
 };
 
 #endif // !DISPLAY_GUARD

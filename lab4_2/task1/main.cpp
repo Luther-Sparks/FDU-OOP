@@ -36,7 +36,6 @@ int main() {
         auto v = bird.get_v();
         auto a = bird.get_a();
         if (c == 'q') {
-            delete &bgm;
             break;
         } else if (c == ' ') {
             bird.set_v(v.first, v_tap_up);
@@ -56,13 +55,12 @@ int main() {
             }
         }
 
+        bird.tick();
         d.put_string(0, 0, "Time: " + std::to_string(d.time() / 1000.0));
         d.put_string(0, 1, "Keystrock: " + std::to_string(c));
         d.put_string(0, 2, "Pos: " + std::to_string(pos.first) + "," + std::to_string(pos.second));
         d.put_string(0, 3, "Speed: " + std::to_string(v.first) + "," + std::to_string(v.second));
         d.put_string(0, 4, "Acceleration: " + std::to_string(a.first) + "," + std::to_string(a.second));
-
-        d.put_string(pos.first, pos.second, "@");
 
         d.refresh();
         d.log();
@@ -71,9 +69,9 @@ int main() {
             Audio game_over(audio_dir + "applause.mp3");
             game_over.play_once();
             show_game_over(d, d.time() / 1000.0);
+            game_over.stop();
             break;
         }
-
-        bird.tick();
+        d.put_string(pos.first, pos.second, "@");
     }
 }
