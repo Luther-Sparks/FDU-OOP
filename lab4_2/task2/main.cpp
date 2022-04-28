@@ -31,7 +31,6 @@ void show_game_over(Display& display, double second) {
     display.put_string(display.get_cols() / 2 - 13, display.get_rows() / 2 + 1,
                        "Press any key to exit");
     display.refresh();
-    display.sleep(200);
     display.get_char();
 }
 
@@ -39,7 +38,7 @@ void add_rectangle(ObjPool& pool, Display& d) {
     static int count = 30;
     if (count-- > 0) return;
     count = 30;
-    int y = rand() % d.get_rows();
+    int y = rand() % (d.get_rows()-2)+1;
     int w = rand() % 5 + 1;
     int x = d.get_cols() - w;
     int h = rand() % (2 * (d.get_rows() - y) / 3) + 1;
@@ -59,10 +58,10 @@ int main() {
     Border* border = new Border(0, 0, d.get_cols(), d.get_rows());
     obj_pool.emplace_back(bird);
     obj_pool.emplace_back(border);
+    int lastc = 0;
 
     while (true) {
         // Process keyboard input
-        int lastc = 0;
         int c = d.get_char(50);
         d.clear();
         if (c == 'q') {
