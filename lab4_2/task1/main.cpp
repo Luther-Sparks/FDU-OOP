@@ -18,7 +18,7 @@ void show_game_over(Display &display, double second) {
                        "Bird survives " + std::to_string(second) + " seconds");
     display.put_string(display.get_cols() / 2 - 13, display.get_rows() / 2 + 1, "Press any key to exit");
     display.refresh();
-    display.sleep(200);
+    // display.sleep(200);
     display.get_char();
 }
 int main() {
