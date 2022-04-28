@@ -90,6 +90,7 @@ int main() {
         // Process invalid object
         for (auto it = obj_pool.begin(); it != obj_pool.end(); it++) {
             if (!(*it)->get_valid() && (*it)->type() == Type::Rectangle) {
+                delete *it;
                 it = obj_pool.erase(it);
             }
         }
