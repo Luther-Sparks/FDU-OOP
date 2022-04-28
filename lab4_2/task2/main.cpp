@@ -106,7 +106,7 @@ int main() {
             show_game_over(d, d.time() / 1000.0);
             game_over.stop();
             collide.stop();
-            // flap.stop();
+            flap.stop();
             break;
         }
 
