@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <atomic>
+#include <pthread.h>
 #ifdef _WIN32
 #include "mingw.thread.h"
 using mingw_stdthread::thread;
@@ -11,8 +13,7 @@ using mingw_stdthread::thread;
 using std::thread;
 using std::atomic_bool;
 #endif
-#include <atomic>
-#include <pthread.h>
+
 
 using std::string;
 using std::cout;
