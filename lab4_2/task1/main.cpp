@@ -36,6 +36,7 @@ int main() {
         auto v = bird.get_v();
         auto a = bird.get_a();
         if (c == 'q') {
+            bgm.stop();
             break;
         } else if (c == ' ') {
             bird.set_v(v.first, v_tap_up);
