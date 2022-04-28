@@ -4,17 +4,9 @@ Border::Border(int x, int y, int width, int height)
     : Rectangle(x, y, width, height) {}
 
 bool Border::is_inside(int x, int y) const {
-    // On vertical edge
-    if (x == this->x || x == this->x + width - 1) {
-        if (y >= this->y && y < this->y + height) {
-            return true;
-        }
-    }
-    // On horizontal edge
-    if (y == this->y || y == this->y + height - 1) {
-        if (x >= this->x && x < this->x + width) {
-            return true;
-        }
+    // If outside the border
+    if (x <= this->x || x > this->x + width || y <= this->y || y > this->y + height) {
+        return true;
     }
     return false;
 }
