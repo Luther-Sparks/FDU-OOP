@@ -9,6 +9,7 @@
 #include "../game/rectangle.h"
 #include "../lib/audio.h"
 #include "bird.h"
+#include <cmath>
 
 using std::vector;
 using ObjPool = vector<Object*>;
@@ -43,7 +44,7 @@ void add_rectangle(ObjPool& pool, Display& d) {
     int y = rand() % d.get_rows();
     int w = rand() % 2 + 1;
     int h = rand() % (2 * (d.get_rows() - y) / 3) + 1;
-    pool.push_back(new MovingRectangle(x, y, w, h, -1, 0));
+    pool.push_back(new MovingRectangle(x, y, w, h, -1*sqrt(sqrt((d.time()+1000)/1000)), 0));
 }
 
 int main() {
