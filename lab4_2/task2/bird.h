@@ -10,11 +10,10 @@ public:
     ~Bird() = default;
 
     void draw(Display& display) const override;
-    void tick(int dx, int dy) override;
+    void tick(int key) override;
     bool is_inside(int x, int y) const override;
     Type type() const override { return Type::Bird; }
-    bool in_screen(Object& border) override;
-    bool if_collide(Object& obj) override;
+    bool detect_collide(Object& obj) override;
     std::pair<int, int> get_pos() const;
     std::pair<double, double> get_v() const;
     std::pair<double, double> get_a() const;

@@ -1,18 +1,16 @@
+#ifndef RECTANGLE_GUARD
+#define RECTANGLE_GUARD
+
 #include "object.h"
-
-
-
-
 class Rectangle : public Object {
    public:
     Rectangle(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
     ~Rectangle() = default;
     void draw(Display& display) const override;
-    void tick(int dx, int dy) override;
+    void tick(int key) override;
     bool is_inside(int x, int y) const override;
     Type type() const override { return Type::Rectangle; }
-    bool in_screen(Object& border) override;
-    bool if_collide(Object& obj) override;
+    bool detect_collide(Object& obj) override;
 
    protected:
     int x;       // x coordinate of the top left corner
@@ -20,3 +18,4 @@ class Rectangle : public Object {
     int width;   // width of the rectangle (in x direction)
     int height;  // height of the rectangle (in y direction)
 };
+#endif

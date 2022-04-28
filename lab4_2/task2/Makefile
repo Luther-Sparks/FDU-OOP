@@ -2,9 +2,9 @@ export CXXFLAGS=-std=c++14	-Wall -Wextra -Werror -O2
 
 all: main.o lib.o game.o bird.o
 ifeq ($(OS),Windows_NT)
-	@g++ -o main.exe main.o bird.o ../lib/display.o ../lib/audio.o ../game/rectangle.o ../lib/pdcurses.a $(CXXFLAGS) -lwinmm
+	@g++ -o main.exe main.o bird.o ../lib/display.o ../lib/audio.o ../game/rectangle.o ../game/moving_rectangle.o ../game/border.o ../lib/pdcurses.a $(CXXFLAGS) -lwinmm
 else
-	@g++ -o main main.o bird.o ../lib/display.o ../lib/audio.o ../game/rectangle.o -lncurses $(CXXFLAGS)
+	@g++ -o main main.o bird.o ../lib/display.o ../lib/audio.o ../game/rectangle.o ../game/moving_rectangle.o ../game/border.o -lncurses $(CXXFLAGS)
 endif
 
 main.o: main.cpp 
@@ -27,7 +27,7 @@ bird.o: bird.cpp bird.h
 	@g++ -c -o bird.o bird.cpp $(CXXFLAGS)
 
 game.o:
-	@echo "Compiling rectangle..."
+	@echo "Compiling game..."
 	@cd ../game && make -s
 
 main: main.o
