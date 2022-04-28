@@ -104,13 +104,15 @@ void Audio::play_loop() {
 
 void Audio::stop() {
     _loop = false;
-    int status = kill(this->_loop_pid, 0);
-    if (status != -1) {
-        kill(this->_loop_pid, SIGKILL);
+    if (this->_loop_pid != 0) {
+        int status = kill(this->_loop_pid, 0);
+        if (status != -1) {
+            kill(this->_loop_pid, SIGKILL);
+        }
+        _t->join();
+        delete _t;
+        _t = nullptr;
     }
-    _t->join();
-    delete _t;
-    _t = nullptr;
 }
 
 #endif
