@@ -86,6 +86,7 @@ class Display {
     WINDOW* win;
     std::chrono::time_point<std::chrono::system_clock> time_start;
     void assert(bool condition, std::string message);
+    bool set_buffer(int x, int y, int ch);
 };
 
 #endif // !DISPLAY_GUARD

@@ -79,7 +79,7 @@ void Audio::play_once() {
     _t = new thread([&, this](){
         this->_loop_pid = fork();
         if (this->_loop_pid == 0) {
-            execlp("afplay", "afplay", "-v", to_string(_volume).c_str(), _file_name.c_str(), NULL);
+            execlp("afplay", "afplay", "-v", std::to_string(_volume).c_str(), _file_name.c_str(), NULL);
         }
         else {
             waitpid(this->_loop_pid, NULL, 0);
@@ -93,7 +93,7 @@ void Audio::play_loop() {
         while (_loop) {
             this->_loop_pid = fork();
             if (this->_loop_pid == 0) {
-                execlp("afplay", "afplay", "-v", to_string(_volume).c_str(), _file_name.c_str(), NULL);     
+                execlp("afplay", "afplay", "-v", std::to_string(_volume).c_str(), _file_name.c_str(), NULL);     
                 }
             else {
                 waitpid(this->_loop_pid, NULL, 0);
