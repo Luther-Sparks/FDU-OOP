@@ -79,34 +79,23 @@ void Display::clear() {
 
 void Display::put_string(int x, int y, std::string str) {
     mvwprintw(win, y, x, str.c_str());  // Print string
-    inner_assert(x + (int)str.length() <= cols, "x + str.length() <= cols");
-    inner_assert(y < lines, "y < lines");
-    inner_assert(x >= 0, "x >= 0");
-    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < (int)str.size(); i++) {
         buffer[y][x + i] = str[i];
+        set_buffer(x + i, y, str[i]);
     }
 }
 
 void Display::put_vertical_line(int x, int y, int l, int ch) {
     mvwvline(win, y, x, ch, l);
-    inner_assert(y + l <= lines, "y + l <= lines");
-    inner_assert(x < cols, "x < cols");
-    inner_assert(x >= 0, "x >= 0");
-    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < l; i++) {
-        buffer[y + i][x] = ch;
+        set_buffer(x, y + i, ch);
     }
 }
 
 void Display::put_horizontal_line(int x, int y, int l, int ch) {
     mvwhline(win, y, x, ch, l);
-    inner_assert(x + l <= cols, "x + l <= cols");
-    inner_assert(y < lines, "y < lines");
-    inner_assert(x >= 0, "x >= 0");
-    inner_assert(y >= 0, "y >= 0");
     for (int i = 0; i < l; i++) {
-        buffer[y][x + i] = ch;
+        set_buffer(x + i, y, ch);
     }
 }
 
@@ -147,9 +136,10 @@ void Display::log(std::string str, bool print_screen) {
     }
 }
 
-void Display::inner_assert(bool condition, std::string message) {
-    if (!condition) {
-        log("Display Assertion Failed: " + message, false);
-        throw std::runtime_error(message);
+bool Display::set_buffer(int x, int y, int ch) {
+    if (x < 0 || x >= cols || y < 0 || y >= lines) {
+        return false;
     }
+    buffer[y][x] = ch;
+    return true;
 }
