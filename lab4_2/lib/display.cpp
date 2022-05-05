@@ -80,7 +80,6 @@ void Display::clear() {
 void Display::put_string(int x, int y, std::string str) {
     mvwprintw(win, y, x, str.c_str());  // Print string
     for (int i = 0; i < (int)str.size(); i++) {
-        buffer[y][x + i] = str[i];
         set_buffer(x + i, y, str[i]);
     }
 }
