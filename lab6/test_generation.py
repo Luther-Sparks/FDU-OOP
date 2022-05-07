@@ -91,7 +91,7 @@ def test_once(test_version: str):
             try:
                 s = form_test(
                     test_version = test_version+f"_{test_index}",
-                    expr_str = str(e),
+                    expr_str = str(e).replace("**","^"),
                     test_val = test_val,
                     expr_result = e.evalf(subs = {"x": test_val}),
                     diff_result = e.diff().evalf(subs = {"x": test_val})
