@@ -1,0 +1,33 @@
+ digraph G {
+    node [shape=rectangle,fillcolor=yellowgreen,style=filled];
+    Expression[shape=ellipse,fillcolor=antiquewhite]
+    Expression->BaseExpr[arrowhead=crow,label="Contains"];
+    Constant[fillcolor=yellow]
+    Variable[fillcolor=yellow]
+    BaseExpr->Constant
+    BaseExpr->Variable
+    BaseExpr->UnaryOP
+    Sin[fillcolor=yellow]
+    Cos[fillcolor=yellow]
+    Minus[fillcolor=yellow]
+    Ln[fillcolor=red]
+    Ex[fillcolor=red]
+    UnaryOP->Sin
+    UnaryOP->Cos
+    UnaryOP->Minus
+    UnaryOP->Ln
+    UnaryOP->Ex
+    BaseExpr->BinaryOP
+    Addition[fillcolor=yellow]
+    Subtraction[fillcolor=yellow]
+    Multiplication[fillcolor=yellow]
+    Division[fillcolor=yellow]
+    Power[fillcolor=red]
+    Log[fillcolor=red]
+    BinaryOP->Addition
+    BinaryOP->Subtraction
+    BinaryOP->Multiplication
+    BinaryOP->Division
+    BinaryOP->Power
+    BinaryOP->Log
+}
