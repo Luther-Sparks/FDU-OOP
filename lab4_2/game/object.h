@@ -14,7 +14,7 @@ enum class Type {
 class Object {
     public:
         Object() = default;
-        ~Object() = default;
+        virtual ~Object() = default;
         // Draws the object to the screen
         virtual void draw(Display& display) const = 0;
         // Updates the object every frame (that's why it's called tick) based on the keyboard input
